@@ -1,0 +1,63 @@
+[
+    {
+        "name": "admin-dashboard",
+        "image": "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-frontend:latest",
+        "cpu": 0,
+        "portMappings": [
+            {
+                "name": "admin-dashboard-80-tcp",
+                "containerPort": 80,
+                "hostPort": 80,
+                "protocol": "tcp",
+                "appProtocol": "http"
+            }
+        ],
+        "essential": true,
+        "environment": [
+            {
+                "name": "NEXT_PUBLIC_BASE_URL",
+                "value": "http://${frontend_service_discovery_name}.${cluster_namespace_name}"
+            },
+            {
+                "name": "NEXT_PUBLIC_API_ENDPOINT",
+                "value": "http://${backend_service_discovery_name}.${cluster_namespace_name}:8000/api"
+            },
+            {
+                "name": "NEXT_PUBLIC_SERVER_URL",
+                "value": "http://${backend_service_discovery_name}.${cluster_namespace_name}:8000"
+            }
+        ],
+        "environmentFiles": [],
+        "mountPoints": [],
+        "volumesFrom": [],
+        "secrets": [
+            {
+                "name": "NEXTAUTH_SECRET",
+                "valueFrom": "${nextauth_parameter_arn}"
+            }
+        ],
+        "ulimits": [],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/admin-dashboard-dev",
+                "mode": "non-blocking",
+                "awslogs-create-group": "true",
+                "max-buffer-size": "25m",
+                "awslogs-region": "ap-southeast-1",
+                "awslogs-stream-prefix": "ecs"
+            },
+            "secretOptions": []
+        },
+        "healthCheck": {
+            "command": [
+                "CMD-SHELL",
+                "curl -f http://localhost/forgot-password || exit 0"
+            ],
+            "interval": 300,
+            "timeout": 5,
+            "retries": 3
+        },
+        "systemControls": []
+    }
+]

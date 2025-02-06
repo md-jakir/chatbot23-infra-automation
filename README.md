@@ -1,1 +1,2 @@
-# chatbot23-infra-automation
+# chatbot-IaC
+Automate the two tier application infrastructure

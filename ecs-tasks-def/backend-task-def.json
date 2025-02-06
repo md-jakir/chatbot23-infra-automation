@@ -1,0 +1,115 @@
+[
+    {
+        "name": "backend",
+        "image": "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-backend:latest",
+        "cpu": 0,
+        "portMappings": [
+            {
+                "name": "backend-port",
+                "containerPort": 8000,
+                "hostPort": 8000,
+                "protocol": "tcp",
+                "appProtocol": "http"
+            }
+        ],
+        "essential": true,
+        "environment": [
+            {
+                "name": "EMAIL_PORT",
+                "value": "587"
+            },
+            {
+                "name": "GOOGLE_OAUTH2_URL",
+                "value": "https://www.googleapis.com/oauth2/v1/userinfo?access_token="
+            },
+            {
+                "name": "JWT_ALGORITHM",
+                "value": "HS256"
+            },
+            {
+                "name": "credentials_profile_name",
+                "value": "905418236735_AWS-BS-MLAI-LnD-Developer"
+            },
+            {
+                "name": "SENDER_EMAIL",
+                "value": "nabibpallab22@gmail.com"
+            },
+            {
+                "name": "REDIS_DB_URL",
+                "value": "redis://redis:6379"
+            },
+            {
+                "name": "EMAIL_HOST",
+                "value": "smtp.gmail.com"
+            },
+            {
+                "name": "region_name",
+                "value": "ap-southeast-1"
+            },
+            {
+                "name": "BASE_URL",
+                "value": "http://${frontend_service_discovery_name}.${cluster_namespace_name}"
+            }
+        ],
+        "environmentFiles": [],
+        "mountPoints": [],
+        "volumesFrom": [],
+        "secrets": [
+            {
+                "name": "DATABASE_URL",
+                "valueFrom": "${db_url_parameter_arn}"
+            },
+            {
+                "name": "JWT_SECRET",
+                "valueFrom": "${jwt_secret_parameter_arn}"
+            },
+            {
+                "name": "JWT_SECRET_FOR_VERIFY",
+                "valueFrom": "${jwt_secret_verify_parameter_arn}"
+            },
+            {
+                "name": "OPENAI_API_KEY",
+                "valueFrom": "${openai_api_key_parameter_arn}"
+            },
+            {
+                "name": "SENDER_PASSWORD",
+                "valueFrom": "${sender_password_parameter_arn}"
+            },
+            {
+                "name": "key",
+                "valueFrom": "${access_key_parameter_arn}"
+            },
+            {
+                "name": "secret",
+                "valueFrom": "${secret_key_parameter_arn}"
+            },
+            {
+                "name": "session_token",
+                "valueFrom": "${session_token_parameter_arn}"
+            }
+        ],
+        "ulimits": [],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/backend-svc",
+                "mode": "non-blocking",
+                "awslogs-create-group": "true",
+                "max-buffer-size": "25m",
+                "awslogs-region": "ap-southeast-1",
+                "awslogs-stream-prefix": "ecs"
+            },
+            "secretOptions": []
+        },
+        "healthCheck": {
+            "command": [
+                "CMD-SHELL",
+                "curl -f http://localhost:8000 || exit 0"
+            ],
+            "interval": 300,
+            "timeout": 5,
+            "retries": 3
+        },
+        "systemControls": []
+    }
+]

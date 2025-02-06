@@ -1,0 +1,14 @@
+vpc_cidr = "10.0.0.0/20"
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs = ["10.0.3.0/24", "10.0.4.0/24"]
+availability_zones   = ["ap-south-1a", "ap-south-1b"]
+private_ip_targets   = ["10.0.3.", "10.0.5."]
+region_name = "ap-south-1"
+frontend_sg_prefix_name = "frontend-alb-sg-"
+backend_sg_prefix_name = "backend-alb-sg-"
+app_frontend_sg = "frontend-app-sg-"
+chatbot_frontend_alb = "chatbot23-frontend-alb"
+chatbot_backend_alb = "chatbot23-backend-alb"
+chatbot_frontend_tg = "chatbot23-frontend-tg"
+chatbot_backend_tg = "chatbot23-backend-tg"
+db_security_group = "chatbot-db-security-group"
