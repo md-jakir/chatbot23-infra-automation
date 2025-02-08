@@ -1,6 +1,6 @@
 # Create an S3 bucket to store CloudTrail logs
 resource "aws_s3_bucket" "cloudtrail_bucket" {
-  bucket = "${terraform.workspace}-${var.project_name}-cloud-trail-logs"
+  bucket        = "${terraform.workspace}-${var.project_name}-cloud-trail-logs"
   force_destroy = true
 
   tags = {
@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = [
+      values = [
         "arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/cloudtrail-${var.project_name}"
       ]
     }
@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
       identifiers = ["cloudtrail.amazonaws.com"]
     }
 
-    actions   = ["s3:PutObject"]
+    actions = ["s3:PutObject"]
     resources = [
       "${aws_s3_bucket.cloudtrail_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
@@ -54,7 +54,7 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
-      values   = [
+      values = [
         "arn:${data.aws_partition.current.partition}:cloudtrail:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:trail/cloudtrail-${var.project_name}"
       ]
     }
@@ -92,12 +92,12 @@ resource "aws_cloudtrail" "chatbot_trail" {
   s3_bucket_name                = aws_s3_bucket.cloudtrail_bucket.bucket
   include_global_service_events = true
   #is_multi_region_trail         = true
-  enable_log_file_validation    = true
+  enable_log_file_validation = true
   #cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.cloudtrail_log_group.arn
   #cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_role.arn
-  kms_key_id                    = var.kms_key_id # Optional, for encrypting CloudTrail logs
+  kms_key_id = var.kms_key_id # Optional, for encrypting CloudTrail logs
 
-  depends_on = [ 
+  depends_on = [
     aws_s3_bucket.cloudtrail_bucket,
     aws_s3_bucket_policy.trail_bucket_policy
   ]

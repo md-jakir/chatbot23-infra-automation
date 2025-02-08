@@ -11,7 +11,7 @@ variable "chatbot_codepipeline_role_arn" {
 variable "source_branch_name" {
   type        = string
   description = "Branch name of the repository to monitor"
-  default = "devops"
+  default     = "devops"
 }
 
 variable "build_project_name" {
@@ -36,5 +36,5 @@ variable "codestart_connection_arn" {
 
 variable "project_name" {
   description = "The Project Name"
-  type = string
+  type        = string
 }

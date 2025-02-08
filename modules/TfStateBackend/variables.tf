@@ -5,6 +5,6 @@ variable "region_name" {
 
 variable "tfstate_file_name" {
   description = "Terraform S3 Backend Name"
-  type = string
-  default = "chatbot23-tf-state-file"
+  type        = string
+  default     = "chatbot23-tf-state-file"
 }

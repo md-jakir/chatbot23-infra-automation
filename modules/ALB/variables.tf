@@ -40,25 +40,25 @@ variable "app_frontend_sg" {
 
 variable "chatbot_frontend_alb" {
   description = "Frontend ALB Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_backend_alb" {
   description = "Backend ALB Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_frontend_tg" {
   description = "Frontend App Target Group Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_backend_tg" {
   description = "Backend App Target Group Name"
-  type = string
+  type        = string
 }
 
 variable "db_security_group" {
   description = "DB Security Group Name"
-  type = string
+  type        = string
 }

@@ -11,10 +11,10 @@ variable "codebuild_project_name" {
 variable "branch_name" {
   type        = string
   description = "The codebulid project name"
-  default = "devops"
+  default     = "devops"
 }
 
 variable "region_name" {
   description = "Region Name"
-  type = string
+  type        = string
 }

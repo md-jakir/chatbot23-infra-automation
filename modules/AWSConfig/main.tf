@@ -28,10 +28,10 @@ resource "aws_s3_bucket_policy" "config_logs_policy" {
         Sid       = "AllowAWSConfigDelivery",
         Effect    = "Allow",
         Principal = { Service = "config.amazonaws.com" },
-        Action    = [
+        Action = [
           "s3:PutObject"
         ],
-        Resource  = "${aws_s3_bucket.config_logs.arn}/*",
+        Resource = "${aws_s3_bucket.config_logs.arn}/*",
         Condition = {
           StringEquals = {
             "s3:x-amz-acl" = "bucket-owner-full-control"
@@ -75,16 +75,16 @@ resource "aws_config_configuration_recorder" "chatbot_config_recorder" {
   name     = "${terraform.workspace}-${var.project_name}-recorder"
   role_arn = aws_iam_role.config_role.arn
 
-  depends_on = [ aws_s3_bucket.config_logs ]
+  depends_on = [aws_s3_bucket.config_logs]
 
   recording_group {
-    all_supported = true
+    all_supported                 = true
     include_global_resource_types = true
   }
 }
 
 # Delivery Channel
 resource "aws_config_delivery_channel" "s3_delivery_channel" {
-  name          = "${terraform.workspace}-${var.project_name}-channel"
+  name           = "${terraform.workspace}-${var.project_name}-channel"
   s3_bucket_name = aws_s3_bucket.config_logs.id
 }

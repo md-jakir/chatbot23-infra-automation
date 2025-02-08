@@ -11,16 +11,16 @@ variable "task_role_arn" {
 variable "region" {
   description = "log group region"
   type        = string
-  default = "ap-southeast-1"
+  default     = "ap-southeast-1"
 }
 
 variable "backend" {
   description = "Backend container configuration"
   type = object({
-    image   = string
-    cpu     = number
-    memory  = number
-    port    = number
+    image  = string
+    cpu    = number
+    memory = number
+    port   = number
   })
 }
 
@@ -66,5 +66,5 @@ variable "session_token_arn" {
 
 variable "project_name" {
   description = "The Project Name"
-  type = string
+  type        = string
 }

@@ -52,8 +52,8 @@ resource "aws_iam_role_policy" "codebuild_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
@@ -80,8 +80,8 @@ resource "aws_iam_role_policy" "ecs_task_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "ssm:GetParameter",
           "ssm:GetParameters",
           "ssm:GetParametersByPath",
@@ -93,27 +93,27 @@ resource "aws_iam_role_policy" "ecs_task_policy" {
       {
         "Effect" = "Allow",
         "Action" = [
-            "ecr:GetAuthorizationToken",
-              "ecr:BatchCheckLayerAvailability",
-              "ecr:GetDownloadUrlForLayer",
-              "ecr:BatchGetImage",
-              "logs:CreateLogStream",
-              "logs:PutLogEvents",
-              "logs:CreateLogGroup"
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:CreateLogGroup"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
         "Effect" = "Allow",
         "Action" = [
-            "ssmmessages:CreateControlChannel",
-            "ssmmessages:CreateDataChannel",
-            "ssmmessages:OpenControlChannel",
-            "ssmmessages:OpenDataChannel",
-            "ssm:DescribeSessions",
-            "ssm:StartSession"
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel",
+          "ssm:DescribeSessions",
+          "ssm:StartSession"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       }
     ]
   })
@@ -144,13 +144,13 @@ resource "aws_iam_policy" "codepipeline_codestar_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [
+    Statement : [
       {
-        Effect: "Allow",
-        Action: [
+        Effect : "Allow",
+        Action : [
           "codestar-connections:UseConnection"
         ],
-        Resource: "arn:aws:codestar-connections:ap-southeast-1:905418236735:connection/*"
+        Resource : "arn:aws:codestar-connections:ap-southeast-1:905418236735:connection/*"
       }
     ]
   })
@@ -166,15 +166,15 @@ resource "aws_iam_policy" "codepipeline_s3_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [
+    Statement : [
       {
-        Effect: "Allow",
-        Action: [
+        Effect : "Allow",
+        Action : [
           "s3:PutObject",
           "s3:GetObject",
           "s3:ListBucket"
         ],
-        Resource: [
+        Resource : [
           "arn:aws:s3:::chatbot-codepipeline-bucket",
           "arn:aws:s3:::chatbot-codepipeline-bucket/*"
         ]
@@ -193,16 +193,16 @@ resource "aws_iam_policy" "codepipeline_codebuild_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [
+    Statement : [
       {
-        Effect: "Allow",
-        Action: [
+        Effect : "Allow",
+        Action : [
           "codebuild:StartBuild",
           "codebuild:BatchGetBuilds",
           "codebuild:BatchGetProjects",
           "codebuild:ListBuildsForProject"
         ],
-        Resource: "arn:aws:codebuild:ap-southeast-1:905418236735:project/*"
+        Resource : "arn:aws:codebuild:ap-southeast-1:905418236735:project/*"
       }
     ]
   })

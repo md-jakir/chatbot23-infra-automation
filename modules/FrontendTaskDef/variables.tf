@@ -11,10 +11,10 @@ variable "region" {
 variable "frontend" {
   description = "Frontend container configuration"
   type = object({
-    image   = string
-    cpu     = number
-    memory  = number
-    port    = number
+    image  = string
+    cpu    = number
+    memory = number
+    port   = number
   })
 }
 
@@ -30,5 +30,5 @@ variable "task_role_arn" {
 
 variable "project_name" {
   description = "The project Name"
-  type = string
+  type        = string
 }

@@ -37,13 +37,13 @@ variable "internal_alb_tg" {
 variable "container_port" {
   description = "Backend Container Port"
   type        = string
-  default = "8000"
+  default     = "8000"
 }
 
 variable "backend_container" {
   description = "Backend Container Name"
   type        = string
-  default = "backend"
+  default     = "backend"
 }
 
 # variable "backend_discovery" {
@@ -55,7 +55,7 @@ variable "backend_container" {
 variable "port_name_alias" {
   description = "Port Alias Name"
   type        = string
-  default = "backend-port"
+  default     = "backend-port"
 }
 
 variable "internal_alb_name" {
@@ -70,5 +70,5 @@ variable "ecs_cluster_name" {
 
 variable "project_name" {
   description = "THe Project Name"
-  type = string
+  type        = string
 }

@@ -1,6 +1,6 @@
 # AWS provider Block
 provider "aws" {
-  region = var.region_name
+  region  = var.region_name
   profile = "AI-chatbot-905418236735"
 }
 
@@ -9,30 +9,32 @@ terraform {
   required_version = "~> 1.9.0"
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~> 5.85.0"
     }
   }
   #backend "s3" {}
-    # bucket  = "dev-tf-state-file-ap-south-1"
-    # key     = "chatbot-app/${terraform.workspace}/terraform.tfstate"
-    # region  = "ap-south-1"
-    # encrypt = true
-    #dynamodb_table = "${var.project_name}-tf-locks"
+  # bucket  = "dev-tf-state-file-ap-south-1"
+  # key     = "chatbot-app/${terraform.workspace}/terraform.tfstate"
+  # region  = "ap-south-1"
+  # encrypt = true
+  #dynamodb_table = "${var.project_name}-tf-locks"
 }
 
 # Hasicorp vault provider Block
 provider "vault" {
   #address = "https://127.0.0.1:8200"
-  address = "https://vault.example.com:8200"
+  address          = "https://vault.example.com:8200"
   skip_child_token = true
 
   auth_login {
     path = "auth/approle/login"
 
     parameters = {
-      role_id = "5e9896c1-92a4-595b-13e5-d56b6f48313c"
-      secret_id = "14ba873c-d290-8063-54f8-413f3020f26d"
+      # role_id = "5e9896c1-92a4-595b-13e5-d56b6f48313c"
+      # secret_id = "14ba873c-d290-8063-54f8-413f3020f26d"
+      role_id   = var.vault_role_id
+      secret_id = var.vault_secret_id
     }
   }
 }
@@ -53,22 +55,22 @@ module "vpc" {
 
 # ALB Module
 module "ALB" {
-  source             = "./modules/ALB" # Path to your ALB module
-  vpc_id             = module.vpc.vpc_id
-  public_subnets     = module.vpc.public_subnet_ids
-  private_subnets    = module.vpc.private_subnet_ids
-  vpc_cidr           = var.vpc_cidr
-  private_ip_targets = var.private_ip_targets
-  chatbot_frontend_tg = var.chatbot_frontend_tg
+  source                  = "./modules/ALB" # Path to your ALB module
+  vpc_id                  = module.vpc.vpc_id
+  public_subnets          = module.vpc.public_subnet_ids
+  private_subnets         = module.vpc.private_subnet_ids
+  vpc_cidr                = var.vpc_cidr
+  private_ip_targets      = var.private_ip_targets
+  chatbot_frontend_tg     = var.chatbot_frontend_tg
   frontend_sg_prefix_name = var.frontend_sg_prefix_name
-  backend_sg_prefix_name = var.backend_sg_prefix_name
-  db_security_group = var.db_security_group
-  app_frontend_sg = var.app_frontend_sg
-  chatbot_frontend_alb = var.chatbot_frontend_alb
-  chatbot_backend_alb = var.chatbot_backend_alb
-  chatbot_backend_tg = var.chatbot_backend_tg
+  backend_sg_prefix_name  = var.backend_sg_prefix_name
+  db_security_group       = var.db_security_group
+  app_frontend_sg         = var.app_frontend_sg
+  chatbot_frontend_alb    = var.chatbot_frontend_alb
+  chatbot_backend_alb     = var.chatbot_backend_alb
+  chatbot_backend_tg      = var.chatbot_backend_tg
 
-  depends_on = [ module.vpc ]
+  depends_on = [module.vpc]
 }
 
 # ECS module start
@@ -87,7 +89,7 @@ module "ecr" {
 
 # IAM module
 module "iam" {
-  source      = "./modules/IAM"
+  source = "./modules/IAM"
 }
 
 # Task Definition for Frontend
@@ -99,11 +101,11 @@ module "fronted_taskdef" {
   task_role_arn       = module.iam.task_role_arn
   project_name        = var.project_name
   region              = var.region_name
-  depends_on          = [ 
+  depends_on = [
     module.ECS,
     module.iam,
     module.parameter_store
-    
+
   ]
 }
 
@@ -122,7 +124,7 @@ module "backend_taskdef" {
   access_key_arn            = module.parameter_store.access_key_arn
   task_role_arn             = module.iam.task_role_arn
   project_name              = var.project_name
-  depends_on                = [ 
+  depends_on = [
     module.parameter_store,
     module.iam,
     module.ECS
@@ -145,20 +147,20 @@ module "parameter_store" {
 
 # CodeBuild Module for Frontend
 module "frontend_codebuild" {
-  source                          = "./modules/codebuild_frontend"
-  service_role_arn                = module.iam.codebuild_role_arn
-  codebuild_fontend_project_name  = var.codebuild_fontend_project_name
-  region_name                     = var.region_name
+  source                         = "./modules/codebuild_frontend"
+  service_role_arn               = module.iam.codebuild_role_arn
+  codebuild_fontend_project_name = var.codebuild_fontend_project_name
+  region_name                    = var.region_name
 }
 
 # CodeBuild Module for Backend
 module "backend_codebuild" {
-  source           = "./modules/codebuild_backend"
-  service_role_arn = module.iam.codebuild_role_arn
+  source                 = "./modules/codebuild_backend"
+  service_role_arn       = module.iam.codebuild_role_arn
   codebuild_project_name = var.codebuild_project_name
-  region_name = var.region_name
+  region_name            = var.region_name
 
-  depends_on = [ module.iam ]
+  depends_on = [module.iam]
 }
 
 # ECS Service for Frontend
@@ -173,7 +175,7 @@ module "ecs_service_frontend" {
   aws_region               = var.region_name
   project_name             = var.project_name
 
-  depends_on = [ 
+  depends_on = [
     module.ALB,
     module.ECS,
     module.vpc,
@@ -193,7 +195,7 @@ module "ecs_service_backend" {
   aws_region          = var.region_name
   project_name        = var.project_name
 
-  depends_on          = [ 
+  depends_on = [
     module.ALB,
     module.vpc,
     module.ECS,
@@ -215,7 +217,7 @@ module "chatbot_codepipeline" {
 
 # CodeStart Connection Module
 module "codestart_connection_github" {
-  source = "./modules/CodeStart_Connections"
+  source               = "./modules/CodeStart_Connections"
   codestart_connection = var.codestart_connection
 }
 
@@ -230,7 +232,7 @@ module "chatbot_backend_codepipeline" {
   project_name                  = var.project_name
   pipeline_name                 = var.pipeline_name
 
-  depends_on = [ 
+  depends_on = [
     module.iam,
     module.ECS,
     module.ecs_service_backend,
@@ -239,18 +241,18 @@ module "chatbot_backend_codepipeline" {
 }
 
 module "cloudtrail" {
-  source = "./modules/CloudTrail"
+  source       = "./modules/CloudTrail"
   project_name = var.project_name
-  region = var.region_name
+  region       = var.region_name
 }
 
 module "config" {
-  source = "./modules/AWSConfig"
+  source       = "./modules/AWSConfig"
   project_name = var.project_name
 }
 
 # TF State file in S3
 module "TfStateBackendS3" {
-  source = "./modules/TfStateBackend"
+  source      = "./modules/TfStateBackend"
   region_name = var.region_name
 }

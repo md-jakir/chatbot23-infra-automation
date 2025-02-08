@@ -42,27 +42,27 @@ variable "app_frontend_sg" {
 
 variable "chatbot_frontend_alb" {
   description = "Frontend ALB Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_backend_alb" {
   description = "Backend ALB Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_frontend_tg" {
   description = "Frontend App Target Group Name"
-  type = string
+  type        = string
 }
 
 variable "chatbot_backend_tg" {
   description = "Backend App Target Group Name"
-  type = string
+  type        = string
 }
 
 variable "db_security_group" {
   description = "DB Security Group Name"
-  type = string
+  type        = string
 }
 
 # ECS and Registry variables
@@ -103,37 +103,37 @@ variable "jwt_secret" {
 variable "jwt_secret_for_verify" {
   description = "JWT secret for verify"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "openai_api_key" {
   description = "OpenAI API key"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "sender_password" {
   description = "Sender Password"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "access_key" {
   description = "Access key"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "secret_key" {
   description = "Secret key"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "session_token" {
   description = "Session token"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 # Common variables
@@ -151,20 +151,20 @@ variable "region_name" {
 variable "frontend" {
   description = "Frontend container configuration"
   type = object({
-    image   = string
-    cpu     = number
-    memory  = number
-    port    = number
+    image  = string
+    cpu    = number
+    memory = number
+    port   = number
   })
 }
 
 variable "backend" {
   description = "Backend container configuration"
   type = object({
-    image   = string
-    cpu     = number
-    memory  = number
-    port    = number
+    image  = string
+    cpu    = number
+    memory = number
+    port   = number
   })
 }
 
@@ -186,4 +186,17 @@ variable "frontend_pipeline_name" {
 variable "codebuild_fontend_project_name" {
   type        = string
   description = "The frontend codebulid project name"
+}
+
+# Vault Terraform Role ID and Secret ID
+variable "vault_role_id" {
+  description = "Vault Role ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "vault_secret_id" {
+  description = "Vault Secret ID"
+  type        = string
+  sensitive   = true
 }

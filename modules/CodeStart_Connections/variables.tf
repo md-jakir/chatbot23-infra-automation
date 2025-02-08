@@ -6,5 +6,5 @@ variable "codestart_connection" {
 variable "type_provider" {
   type        = string
   description = "Provider Type"
-  default = "GitHub"
+  default     = "GitHub"
 }

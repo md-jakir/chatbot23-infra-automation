@@ -1,17 +1,17 @@
 locals {
-  log_group_name = "${terraform.workspace}-CodeBuildBackendLogGroup"
+  log_group_name  = "${terraform.workspace}-CodeBuildBackendLogGroup"
   log_stream_name = "${terraform.workspace}-CodeBuildBackendLogStream"
 }
 
 resource "aws_codebuild_project" "build_project" {
-  name          = "${terraform.workspace}-${var.codebuild_project_name}"
-  service_role  = var.service_role_arn
+  name         = "${terraform.workspace}-${var.codebuild_project_name}"
+  service_role = var.service_role_arn
 
   environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
-    type                        = "LINUX_CONTAINER"
-    privileged_mode             = true
+    compute_type    = "BUILD_GENERAL1_SMALL"
+    image           = "aws/codebuild/amazonlinux-x86_64-standard:5.0"
+    type            = "LINUX_CONTAINER"
+    privileged_mode = true
 
     environment_variable {
       name  = "AWS_DEFAULT_REGION"
@@ -36,6 +36,6 @@ resource "aws_codebuild_project" "build_project" {
   }
   tags = {
     Environment = terraform.workspace
-    Name = "BackendCodeBuild"
+    Name        = "BackendCodeBuild"
   }
 }

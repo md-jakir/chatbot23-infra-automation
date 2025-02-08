@@ -26,19 +26,19 @@ variable "internet_alb_tg" {
 variable "container_port" {
   description = "Internet ALB Target Group"
   type        = string
-  default = "80"
+  default     = "80"
 }
 
 variable "frontend_container" {
   description = "Internet ALB Target Group"
   type        = string
-  default = "admin-dashboard"
+  default     = "admin-dashboard"
 }
 
 variable "port_name_alias" {
   description = "Internet ALB Target Group"
   type        = string
-  default = "admin-dashboard-80-tcp"
+  default     = "admin-dashboard-80-tcp"
 }
 
 variable "internet_alb_name" {
@@ -53,5 +53,5 @@ variable "ecs_cluster_name" {
 
 variable "project_name" {
   description = "The Project Name"
-  type = string
+  type        = string
 }

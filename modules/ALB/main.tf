@@ -38,9 +38,9 @@ resource "aws_security_group" "internal_alb_sg" {
 
   # Allow inbound HTTP (8000) only from within the VPC
   ingress {
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
+    from_port = 8000
+    to_port   = 8000
+    protocol  = "tcp"
     #cidr_blocks = [var.vpc_cidr]
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -113,7 +113,6 @@ resource "aws_lb" "internal_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.internal_alb_sg.id]
-  #subnets            = var.private_subnets
   subnets            = var.public_subnets
 
   enable_deletion_protection = false
@@ -159,7 +158,7 @@ resource "aws_lb_target_group" "internet_alb_tg" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"  # Use "ip" target type for IP address targets
+  target_type = "ip"
 
   health_check {
     path                = "/forgot-password"
@@ -179,7 +178,7 @@ resource "aws_lb_target_group" "internal_alb_tg" {
   port        = 8000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"  # Use "ip" target type for IP address targets
+  target_type = "ip"
 
   health_check {
     path                = "/"
@@ -200,19 +199,17 @@ resource "aws_security_group" "db_security_group" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    #cidr_blocks = ["10.0.0.0/20"]
-    security_groups = [ aws_security_group.internal_alb_sg.id ]
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
+    security_groups = [aws_security_group.internal_alb_sg.id]
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    #cidr_blocks = ["0.0.0.0/0"]
-    security_groups = [ aws_security_group.internal_alb_sg.id ]
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    security_groups = [aws_security_group.internal_alb_sg.id]
   }
 
   tags = {

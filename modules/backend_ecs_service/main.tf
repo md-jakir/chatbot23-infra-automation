@@ -1,19 +1,19 @@
 locals {
   #frontend_discovery_name = "${terraform.workspace}-FrontendDiscovery"
-  ecs_cluster_namespace = "${terraform.workspace}-chatbot23-ecs-cluster-ns"
+  ecs_cluster_namespace  = "${terraform.workspace}-chatbot23-ecs-cluster-ns"
   backend_discovery_name = "${terraform.workspace}-backend-discovery"
-  log_group_name = "/ecs/${terraform.workspace}-BackendLogsGroup"
+  log_group_name         = "/ecs/${terraform.workspace}-BackendLogsGroup"
 }
 
 resource "aws_ecs_service" "backend_service" {
-  name            = "${terraform.workspace}-BackendService"
-  cluster         = var.ecs_cluster_name
-  task_definition = var.backend_taskdef_arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  name                 = "${terraform.workspace}-BackendService"
+  cluster              = var.ecs_cluster_name
+  task_definition      = var.backend_taskdef_arn
+  desired_count        = 1
+  launch_type          = "FARGATE"
   force_new_deployment = true
   deployment_circuit_breaker {
-    enable = true
+    enable   = true
     rollback = true
   }
 
@@ -30,14 +30,14 @@ resource "aws_ecs_service" "backend_service" {
   }
 
   service_connect_configuration {
-    enabled = true
+    enabled   = true
     namespace = local.ecs_cluster_namespace
     service {
       discovery_name = local.backend_discovery_name
-      port_name = var.port_name_alias # This must match the port name defined in the task definition
+      port_name      = var.port_name_alias # This must match the port name defined in the task definition
       client_alias {
         dns_name = "${local.backend_discovery_name}.${local.ecs_cluster_namespace}"
-        port = var.container_port
+        port     = var.container_port
       }
     }
 
