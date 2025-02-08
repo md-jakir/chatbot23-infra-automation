@@ -124,3 +124,5 @@ Automate the two tier application infrastructure.
 ![image](https://github.com/user-attachments/assets/04a3ca86-6684-41ff-92bc-dfe2a959418c)
 # Checkov Result 
 ![image](https://github.com/user-attachments/assets/76ed8bc3-31a1-4f2d-abae-7ccc0f96fce3)
+![image](https://github.com/user-attachments/assets/73dfe59c-0a01-4171-828d-0181e85436b3)
+
