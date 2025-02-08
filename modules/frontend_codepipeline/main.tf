@@ -1,14 +1,19 @@
 resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "chatbot-codepipeline-bucket"
+  bucket = "${terraform.workspace}-${var.project_name}-pipeline-frontend"
+
+  tags = {
+    Environment = terraform.workspace
+    Name = "FrontendPipelineS3"
+  }
 }
 
 resource "aws_codestarconnections_connection" "frontend_connection" {
-  name          = "chatbot-connection"
+  name          = "${terraform.workspace}-Chatbot23Connection"
   provider_type = "GitHub"
 }
 
 resource "aws_codepipeline" "pipeline" {
-  name     = var.pipeline_name
+  name     = var.frontend_pipeline_name
   role_arn = var.chatbot_codepipeline_role_arn
   pipeline_type = "V2"
   execution_mode = "QUEUED"
@@ -21,7 +26,7 @@ resource "aws_codepipeline" "pipeline" {
   stage {
     name = "Source"
     action {
-        name        = "chatbot-frontend-source"
+        name        = "${terraform.workspace}-${var.project_name}-frontend-source"
         category    = "Source"
         owner       = "AWS"
         provider    = "CodeStarSourceConnection"
@@ -29,7 +34,6 @@ resource "aws_codepipeline" "pipeline" {
         output_artifacts = ["source_output"]
 
         configuration = {
-            #ConnectionArn     = aws_codestarconnections_connection.frontend_connection.arn
             ConnectionArn     = var.codestart_connection_arn
             FullRepositoryId  = "brainstationrandd/chatbot_admin_dashboard"
             BranchName        = var.source_branch_name
@@ -41,7 +45,7 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-        name        = "chatbot-frontend-build"
+        name        = "${terraform.workspace}-${var.project_name}-frontend-build"
         category    = "Build"
         owner       = "AWS"
         provider    = "CodeBuild"
@@ -59,7 +63,7 @@ resource "aws_codepipeline" "pipeline" {
     name = "Deploy"
 
     action {
-        name        = "ECS_Deploy"
+        name        = "${terraform.workspace}-ECSFrontendDeploy"
         category    = "Deploy"
         owner       = "AWS"
         provider    = "ECS"
@@ -73,19 +77,8 @@ resource "aws_codepipeline" "pipeline" {
         }
     }
   }
+  tags = {
+    Environment = terraform.workspace
+    Name = "FrontendCodePipeline"
+  }
 }
-
-# resource "aws_codepipeline_webhook" "webhook" {
-#   name            = "${var.pipeline_name}-webhook"
-#   target_action   = "Source"
-#   target_pipeline = aws_codepipeline.pipeline.name
-#   filter {
-#     json_path   = "$.ref"
-#     match_equals = "refs/heads/${var.source_branch_name}"
-#   }
-
-#   authentication         = "UNAUTHENTICATED"
-#   authentication_configuration {
-#     none = true
-#   }
-# }

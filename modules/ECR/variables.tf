@@ -1,10 +1,5 @@
-# modules/ecr/variables.tf
 variable "repository_names" {
-  description = "List of repository names to create"
+  description = "Names of the ECR repositories to create"
   type        = list(string)
 }
 
-variable "environment" {
-  description = "Environment (e.g., dev, staging, prod)"
-  type        = string
-}

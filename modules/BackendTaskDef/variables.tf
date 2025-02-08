@@ -1,8 +1,3 @@
-variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
-  type        = string
-}
-
 variable "execution_role_arn" {
   description = "IAM role for ECS task execution"
   type        = string
@@ -27,13 +22,6 @@ variable "backend" {
     memory  = number
     port    = number
   })
-  default = {
-    image   = "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-backend:latest"
-    cpu     = 256
-    memory  = 512
-    port    = 8000
-    hostport = 8000
-  }
 }
 
 variable "db_url_arn" {
@@ -76,14 +64,7 @@ variable "session_token_arn" {
   description = "The ARN of the Secret Key parameter from the parameter store."
 }
 
-variable "frontend_discovery_name" {
-  type        = string
-  description = "The frontend service discovery name"
-  default = "admin-dashboard-svc"
-}
-
-variable "ecs_cluster_namespace" {
-  type        = string
-  description = "The cluster namespace name"
-  default = "chatbot-cluster-namespace"
+variable "project_name" {
+  description = "The Project Name"
+  type = string
 }

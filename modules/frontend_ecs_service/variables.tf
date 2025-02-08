@@ -3,11 +3,6 @@ variable "frontend_taskdef_arn" {
   description = "The ARN of the frontend task def."
 }
 
-# variable "public_subnets" {
-#   description = "List of public subnet IDs for ECS service"
-#   type        = list(string)
-# }
-
 variable "private_subnets" {
   description = "List of public subnet IDs for ECS service"
   type        = list(string)
@@ -18,26 +13,14 @@ variable "frontend_security_groups" {
   type        = list(string)
 }
 
-variable "environment" {
-  description = "Environment name (e.g., dev, staging, production)"
-  type        = string
-}
-
 variable "aws_region" {
   description = "log group region"
   type        = string
-  default = "ap-southeast-1"
 }
 
 variable "internet_alb_tg" {
   description = "Internet ALB Target Group"
   type        = string
-}
-
-variable "cluster_namespace" {
-  description = "Internet ALB Target Group"
-  type        = string
-  default = "chatbot-cluster-namespace"
 }
 
 variable "container_port" {
@@ -50,12 +33,6 @@ variable "frontend_container" {
   description = "Internet ALB Target Group"
   type        = string
   default = "admin-dashboard"
-}
-
-variable "frontend_discovery" {
-  description = "Internet ALB Target Group"
-  type        = string
-  default = "admin-dashboard-svc"
 }
 
 variable "port_name_alias" {
@@ -72,4 +49,9 @@ variable "internet_alb_name" {
 variable "ecs_cluster_name" {
   description = "Internet ALB Target Group"
   type        = string
+}
+
+variable "project_name" {
+  description = "The Project Name"
+  type = string
 }

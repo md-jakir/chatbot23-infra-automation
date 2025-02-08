@@ -1,29 +1,19 @@
-# modules/ecs_cluster/main.tf
 resource "aws_service_discovery_private_dns_namespace" "namespace" {
-  name        = "${var.cluster_name}-namespace"
+  name        = "${terraform.workspace}-${var.cluster_name}-ns"
   description = "Private DNS namespace for ECS service discovery"
   vpc         = var.vpc_id
 
   tags = {
-    Environment = var.environment
+    Environment = "${terraform.workspace}"
   }
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = var.cluster_name
+  name = "${terraform.workspace}-${var.cluster_name}"
   tags = {
-    Environment = var.environment
+    Environment = "${terraform.workspace}"
   }
   service_connect_defaults {
     namespace = aws_service_discovery_private_dns_namespace.namespace.arn
   }
 }
-
-# Output for the ECS cluster ARN and Name
-# output "cluster_arn" {
-#   value = aws_ecs_cluster.ecs_cluster.arn
-# }
-
-# output "cluster_name" {
-#   value = aws_ecs_cluster.ecs_cluster.name
-# }

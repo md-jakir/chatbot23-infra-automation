@@ -18,16 +18,3 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-# variable "environment" {
-#   description = "Environment name (e.g., dev, staging, production)"
-#   type        = string
-# }
-
-# variable "nat_gateway_mapping" {
-#   type = map(string)
-#   default = {
-#     "private_subnet_1_id" = "public_subnet_1_id"
-#     "private_subnet_2_id" = "public_subnet_2_id"
-#   }
-# }
-

@@ -1,7 +1,7 @@
 [
     {
         "name": "admin-dashboard",
-        "image": "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-frontend:latest",
+        "image": "905418236735.dkr.ecr.ap-south-1.amazonaws.com/dev-chatbot-frontend:latest",
         "cpu": 0,
         "portMappings": [
             {
@@ -40,11 +40,11 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "/ecs/admin-dashboard-dev",
+                "awslogs-group": "${log_group_name}",
                 "mode": "non-blocking",
                 "awslogs-create-group": "true",
                 "max-buffer-size": "25m",
-                "awslogs-region": "ap-southeast-1",
+                "awslogs-region": "ap-south-1",
                 "awslogs-stream-prefix": "ecs"
             },
             "secretOptions": []

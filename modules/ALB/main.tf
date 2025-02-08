@@ -101,6 +101,10 @@ resource "aws_lb" "internet_alb" {
   subnets            = var.public_subnets
 
   enable_deletion_protection = false
+
+  tags = {
+    Environment = "${terraform.workspace}"
+  }
 }
 
 # Internal-facing ALB
@@ -113,6 +117,10 @@ resource "aws_lb" "internal_alb" {
   subnets            = var.public_subnets
 
   enable_deletion_protection = false
+
+  tags = {
+    Environment = "${terraform.workspace}"
+  }
 }
 
 # Listener for Internet-facing ALB on port 80
@@ -125,6 +133,9 @@ resource "aws_lb_listener" "internet_alb_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.internet_alb_tg.arn
   }
+  tags = {
+    Environment = "${terraform.workspace}"
+  }
 }
 
 # Listener for Internal-facing ALB on port 8000
@@ -136,6 +147,9 @@ resource "aws_lb_listener" "internal_alb_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.internal_alb_tg.arn
+  }
+  tags = {
+    Environment = "${terraform.workspace}"
   }
 }
 
@@ -154,6 +168,9 @@ resource "aws_lb_target_group" "internet_alb_tg" {
     healthy_threshold   = 3
     unhealthy_threshold = 3
   }
+  tags = {
+    Environment = "${terraform.workspace}"
+  }
 }
 
 # Target Group for Internal ALB
@@ -170,6 +187,9 @@ resource "aws_lb_target_group" "internal_alb_tg" {
     timeout             = 5
     healthy_threshold   = 3
     unhealthy_threshold = 3
+  }
+  tags = {
+    Environment = "${terraform.workspace}"
   }
 }
 

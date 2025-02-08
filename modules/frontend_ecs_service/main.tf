@@ -1,5 +1,12 @@
+locals {
+  frontend_discovery_name = "${terraform.workspace}-frontend-discovery"
+  ecs_cluster_namespace = "${terraform.workspace}-chatbot23-ecs-cluster-ns"
+  backend_discovery_name = "${terraform.workspace}-backend-discovery"
+  log_group_name = "/ecs/${terraform.workspace}-FrontendLogsGroup"
+}
+
 resource "aws_ecs_service" "frontend_service" {
-  name            = "frontend-service"
+  name            = "${terraform.workspace}-FrontendService"
   cluster         = var.ecs_cluster_name
   task_definition = var.frontend_taskdef_arn
   desired_count   = 1
@@ -19,17 +26,16 @@ resource "aws_ecs_service" "frontend_service" {
     target_group_arn = var.internet_alb_tg
     container_name   = var.frontend_container
     container_port   = var.container_port
-    #elb_name = var.internet_alb_name
   }
 
   service_connect_configuration {
     enabled = true
-    namespace = var.cluster_namespace 
+    namespace = local.ecs_cluster_namespace
     service {
-      discovery_name = var.frontend_discovery
-      port_name = var.port_name_alias # This must match the port name defined in the task definition
+      discovery_name = local.frontend_discovery_name
+      port_name = var.port_name_alias
       client_alias {
-        dns_name = "${var.frontend_discovery}.${var.cluster_namespace}"
+        dns_name = "${local.frontend_discovery_name}.${local.ecs_cluster_namespace}"
         port = var.container_port
       }
     }
@@ -37,7 +43,7 @@ resource "aws_ecs_service" "frontend_service" {
     log_configuration {
       log_driver = "awslogs"
       options = {
-        awslogs-group         = "/ecs/admin-dashboard-dev"
+        awslogs-group         = "${local.log_group_name}"
         awslogs-region        = var.aws_region
         awslogs-stream-prefix = "ecs"
       }
@@ -45,6 +51,8 @@ resource "aws_ecs_service" "frontend_service" {
   }
 
   tags = {
-    Environment = var.environment
+    Environment = "${terraform.workspace}"
+    Service     = "Frontend"
+    projectName = var.project_name
   }
 }

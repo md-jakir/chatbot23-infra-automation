@@ -1,7 +1,6 @@
 variable "codestart_connection" {
   type        = string
   description = "CodeStart Connection Name"
-  default = "chatbot-connection"
 }
 
 variable "type_provider" {

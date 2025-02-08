@@ -18,9 +18,3 @@ output "chatbot_codepipeline_role_arn" {
   value       = aws_iam_role.pipeline_role.arn
 }
 
-# output "bastion_host_role_arn" {
-#   description = "ARN of the Bastion Host Role"
-#   value       = aws_iam_role.bastion_host_role.arn
-# }
-
-

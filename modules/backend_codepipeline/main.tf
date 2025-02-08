@@ -1,5 +1,10 @@
 resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "chatbot-codepipeline-backend-bucket"
+  bucket = "${terraform.workspace}-${var.project_name}-pipeline-backend"
+
+  tags = {
+    Environment = terraform.workspace
+    Name = "BackendPipelineS3"
+  }
 }
 
 # resource "aws_codestarconnections_connection" "backend_connection" {
@@ -8,7 +13,7 @@ resource "aws_s3_bucket" "codepipeline_bucket" {
 # }
 
 resource "aws_codepipeline" "pipeline" {
-  name     = var.pipeline_name
+  name     = "${terraform.workspace}-${var.pipeline_name}"
   role_arn = var.chatbot_codepipeline_role_arn
   pipeline_type = "V2"
   execution_mode = "QUEUED"
@@ -21,7 +26,7 @@ resource "aws_codepipeline" "pipeline" {
   stage {
     name = "Source"
     action {
-        name        = "chatbot-backend-source"
+        name        = "${terraform.workspace}-${var.project_name}-backend-source"
         category    = "Source"
         owner       = "AWS"
         provider    = "CodeStarSourceConnection"
@@ -29,7 +34,6 @@ resource "aws_codepipeline" "pipeline" {
         output_artifacts = ["source_output"]
 
         configuration = {
-            #ConnectionArn     = aws_codestarconnections_connection.backend_connection.arn
             ConnectionArn     = var.codestart_connection_arn
             FullRepositoryId  = "brainstationrandd/chatbot_boilerplate"
             BranchName        = var.source_branch_name
@@ -41,7 +45,7 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-        name        = "chatbot-backend-build"
+        name        = "${terraform.workspace}-${var.project_name}-backend-build"
         category    = "Build"
         owner       = "AWS"
         provider    = "CodeBuild"
@@ -59,7 +63,7 @@ resource "aws_codepipeline" "pipeline" {
     name = "Deploy"
 
     action {
-        name        = "ECS_Deploy"
+        name        = "${terraform.workspace}-ECSBackendDeploy"
         category    = "Deploy"
         owner       = "AWS"
         provider    = "ECS"
@@ -72,6 +76,10 @@ resource "aws_codepipeline" "pipeline" {
           FileName    = "imagedefinitions.json"
         }
     }
+  }
+  tags = {
+    Environment = terraform.workspace
+    Name = "BackendCodePipeline"
   }
 }
 

@@ -1,10 +1,21 @@
 # AWS Config Delivery Channel
 resource "aws_s3_bucket" "config_logs" {
-  bucket = "${var.project_name}-aws-config-logs-${var.region}"
+  bucket = "${terraform.workspace}-${var.project_name}-config-logs"
   tags = {
-    Name        = "${var.project_name}-aws-config-logs"
-    Environment = var.environment
+    projectName = "${var.project_name}"
+    Environment = "${terraform.workspace}"
   }
+}
+
+resource "aws_config_config_rule" "chatbot_config_rule" {
+  name = "${terraform.workspace}-${var.project_name}-ConfigRule"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "S3_BUCKET_VERSIONING_ENABLED"
+  }
+
+  depends_on = [aws_config_configuration_recorder.chatbot_config_recorder]
 }
 
 resource "aws_s3_bucket_policy" "config_logs_policy" {
@@ -60,9 +71,11 @@ resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
 }
 
 # AWS Config Recorder
-resource "aws_config_configuration_recorder" "chatbot_config" {
-  name     = "default"
+resource "aws_config_configuration_recorder" "chatbot_config_recorder" {
+  name     = "${terraform.workspace}-${var.project_name}-recorder"
   role_arn = aws_iam_role.config_role.arn
+
+  depends_on = [ aws_s3_bucket.config_logs ]
 
   recording_group {
     all_supported = true
@@ -72,6 +85,6 @@ resource "aws_config_configuration_recorder" "chatbot_config" {
 
 # Delivery Channel
 resource "aws_config_delivery_channel" "s3_delivery_channel" {
-  name          = "default"
+  name          = "${terraform.workspace}-${var.project_name}-channel"
   s3_bucket_name = aws_s3_bucket.config_logs.id
 }

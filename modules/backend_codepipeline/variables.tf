@@ -1,7 +1,7 @@
 variable "pipeline_name" {
   type        = string
   description = "Name of the CodePipeline"
-  default = "ChatbotBackendPipeline"
+  #default = "ChatbotBackendPipeline"
 }
 
 variable "chatbot_codepipeline_role_arn" {
@@ -45,4 +45,9 @@ variable "ecs_service_name" {
 variable "codestart_connection_arn" {
   type        = string
   description = "GitHub Connection ARN"
+}
+
+variable "project_name" {
+  description = "The Projec Name"
+  type = string
 }

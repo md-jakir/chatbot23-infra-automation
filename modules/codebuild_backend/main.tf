@@ -1,5 +1,10 @@
+locals {
+  log_group_name = "${terraform.workspace}-CodeBuildBackendLogGroup"
+  log_stream_name = "${terraform.workspace}-CodeBuildBackendLogStream"
+}
+
 resource "aws_codebuild_project" "build_project" {
-  name          = var.codebuild_project_name
+  name          = "${terraform.workspace}-${var.codebuild_project_name}"
   service_role  = var.service_role_arn
 
   environment {
@@ -10,17 +15,17 @@ resource "aws_codebuild_project" "build_project" {
 
     environment_variable {
       name  = "AWS_DEFAULT_REGION"
-      value = "ap-southeast-1"
+      value = var.region_name
     }
     environment_variable {
       name  = "REPOSITORY_URI"
-      value = "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-backend"
+      value = "905418236735.dkr.ecr.ap-south-1.amazonaws.com/dev-chatbot23-backend"
     }
   }
   logs_config {
     cloudwatch_logs {
-      group_name  = var.log_group_name
-      stream_name = var.log_stream_name
+      group_name  = local.log_group_name
+      stream_name = local.log_stream_name
     }
   }
   source {
@@ -29,5 +34,8 @@ resource "aws_codebuild_project" "build_project" {
   artifacts {
     type = "CODEPIPELINE"
   }
-  #buildspec = file("${path.module}/buildspec.yml")
+  tags = {
+    Environment = terraform.workspace
+    Name = "BackendCodeBuild"
+  }
 }

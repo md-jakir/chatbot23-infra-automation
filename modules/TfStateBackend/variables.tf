@@ -1,16 +1,10 @@
-# variable "environment" {
-#   description = "Environment name (e.g., dev, staging, production)"
-#   type        = string
-#   default = "PROD"
-# }
-
-# variable "project_name" {
-#   description = "The Project Name"
-#   type        = string
-#   default = "chatbot23"
-# }
-
 variable "region_name" {
   description = "AWS region"
   type        = string
+}
+
+variable "tfstate_file_name" {
+  description = "Terraform S3 Backend Name"
+  type = string
+  default = "chatbot23-tf-state-file"
 }

@@ -18,15 +18,9 @@ variable "security_groups" {
   type        = list(string)
 }
 
-variable "environment" {
-  description = "Environment name (e.g., dev, staging, production)"
-  type        = string
-}
-
 variable "aws_region" {
   description = "log group region"
   type        = string
-  default = "ap-southeast-1"
 }
 
 variable "internal_alb_tg" {
@@ -34,11 +28,11 @@ variable "internal_alb_tg" {
   type        = string
 }
 
-variable "cluster_namespace" {
-  description = "ECS Cluster NameSpace Name"
-  type        = string
-  default = "chatbot-cluster-namespace"
-}
+# variable "cluster_namespace" {
+#   description = "ECS Cluster NameSpace Name"
+#   type        = string
+#   #default = "chatbot-cluster-namespace"
+# }
 
 variable "container_port" {
   description = "Backend Container Port"
@@ -52,11 +46,11 @@ variable "backend_container" {
   default = "backend"
 }
 
-variable "backend_discovery" {
-  description = "Backend Discovery Name"
-  type        = string
-  default = "backend-svc"
-}
+# variable "backend_discovery" {
+#   description = "Backend Discovery Name"
+#   type        = string
+#   #default = "backend-svc"
+# }
 
 variable "port_name_alias" {
   description = "Port Alias Name"
@@ -72,4 +66,9 @@ variable "internal_alb_name" {
 variable "ecs_cluster_name" {
   description = "ECS Cluster Name"
   type        = string
+}
+
+variable "project_name" {
+  description = "THe Project Name"
+  type = string
 }

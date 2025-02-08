@@ -1,5 +1,12 @@
+locals {
+  #frontend_discovery_name = "${terraform.workspace}-FrontendDiscovery"
+  ecs_cluster_namespace = "${terraform.workspace}-chatbot23-ecs-cluster-ns"
+  backend_discovery_name = "${terraform.workspace}-backend-discovery"
+  log_group_name = "/ecs/${terraform.workspace}-BackendLogsGroup"
+}
+
 resource "aws_ecs_service" "backend_service" {
-  name            = "backend-service"
+  name            = "${terraform.workspace}-BackendService"
   cluster         = var.ecs_cluster_name
   task_definition = var.backend_taskdef_arn
   desired_count   = 1
@@ -24,12 +31,12 @@ resource "aws_ecs_service" "backend_service" {
 
   service_connect_configuration {
     enabled = true
-    namespace = var.cluster_namespace
+    namespace = local.ecs_cluster_namespace
     service {
-      discovery_name = var.backend_discovery
+      discovery_name = local.backend_discovery_name
       port_name = var.port_name_alias # This must match the port name defined in the task definition
       client_alias {
-        dns_name = "${var.backend_discovery}.${var.cluster_namespace}"
+        dns_name = "${local.backend_discovery_name}.${local.ecs_cluster_namespace}"
         port = var.container_port
       }
     }
@@ -37,14 +44,15 @@ resource "aws_ecs_service" "backend_service" {
     log_configuration {
       log_driver = "awslogs"
       options = {
-        awslogs-group         = "/ecs/backend-svc"
+        awslogs-group         = "${local.log_group_name}"
         awslogs-region        = var.aws_region
         awslogs-stream-prefix = "ecs"
       }
     }
   }
-
   tags = {
-    Environment = var.environment
+    Environment = "${terraform.workspace}"
+    projectName = var.project_name
+    Service     = "Backend"
   }
 }

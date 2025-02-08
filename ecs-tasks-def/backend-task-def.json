@@ -1,7 +1,7 @@
 [
     {
         "name": "backend",
-        "image": "905418236735.dkr.ecr.ap-southeast-1.amazonaws.com/dev-chatbot-backend:latest",
+        "image": "905418236735.dkr.ecr.ap-south-1.amazonaws.com/dev-chatbot23-backend:latest",
         "cpu": 0,
         "portMappings": [
             {
@@ -44,7 +44,7 @@
             },
             {
                 "name": "region_name",
-                "value": "ap-southeast-1"
+                "value": "ap-south-1"
             },
             {
                 "name": "BASE_URL",
@@ -92,7 +92,7 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "/ecs/backend-svc",
+                "awslogs-group": "${log_group_name}",
                 "mode": "non-blocking",
                 "awslogs-create-group": "true",
                 "max-buffer-size": "25m",

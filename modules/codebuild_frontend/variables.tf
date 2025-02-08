@@ -9,14 +9,9 @@ variable "github_token_name" {
   default = "chatbot-github-app-token"
 }
 
-# variable "random_name" {
-#   default = random_pet.variable_name.id
-# }
-
-variable "codebuild_project_name" {
+variable "codebuild_fontend_project_name" {
   type        = string
   description = "The frontend codebulid project name"
-  default = "chatbot-frontend-proj"
 }
 
 variable "branch_name" {
@@ -25,14 +20,7 @@ variable "branch_name" {
   default = "devops"
 }
 
-variable "log_stream_name" {
-  type        = string
-  description = "The codebulid project name"
-  default = "chatbot-frontend-log-stream"
-}
-
-variable "log_group_name" {
-  type        = string
-  description = "The codebulid project name"
-  default = "chatbot-fronted-log-group"
+variable "region_name" {
+  description = "Region Name"
+  type = string
 }
