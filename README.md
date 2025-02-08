@@ -120,5 +120,5 @@ Automate the two tier application infrastructure.
     │       └── terraform.tfstate.backup
     ├── terraform.tfvars
     └── variables.tf
-# Project Design
+# Project Infrastructure Design
 ![image](https://github.com/user-attachments/assets/04a3ca86-6684-41ff-92bc-dfe2a959418c)
