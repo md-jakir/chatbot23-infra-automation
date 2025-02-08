@@ -148,6 +148,7 @@ variable "region_name" {
   type        = string
 }
 
+# Container CPU and Memory Specification Variables
 variable "frontend" {
   description = "Frontend container configuration"
   type = object({
@@ -168,6 +169,7 @@ variable "backend" {
   })
 }
 
+#CodeBuild and CodePipeline Variables
 variable "pipeline_name" {
   type        = string
   description = "Name of the CodePipeline"
