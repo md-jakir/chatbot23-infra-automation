@@ -2,28 +2,27 @@
 resource "aws_security_group" "internet_alb_sg" {
   name_prefix = "${terraform.workspace}-${var.frontend_sg_prefix_name}"
   vpc_id      = var.vpc_id
+  description = "Security Group for the public ALB"
 
-  # Allow inbound HTTP (80) from anywhere
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = var.public_alb_ingress_ports
+    iterator = port
+    content {
+      from_port = port.value
+      to_port = port.value
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = var.public_alb_egress_ports
+    iterator = port
+    content {
+      from_port = port.value
+      to_port = port.value
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
   tags = {
     Name        = "${terraform.workspace}-${var.frontend_sg_prefix_name}"
@@ -36,21 +35,25 @@ resource "aws_security_group" "internal_alb_sg" {
   name_prefix = "${terraform.workspace}-${var.backend_sg_prefix_name}"
   vpc_id      = var.vpc_id
 
-  # Allow inbound HTTP (8000) only from within the VPC
-  ingress {
-    from_port = 8000
-    to_port   = 8000
-    protocol  = "tcp"
-    #cidr_blocks = [var.vpc_cidr]
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = var.internal_alb_ingress_ports
+    iterator = port
+    content {
+      from_port = port.value
+      to_port = port.value
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
-
-  # Allow all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = var.internal_alb_egress_ports
+    iterator = port
+    content {
+      from_port = port.value
+      to_port = port.value
+      protocol = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
   tags = {
     Name        = "${terraform.workspace}-${var.backend_sg_prefix_name}"

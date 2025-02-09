@@ -202,3 +202,23 @@ variable "vault_secret_id" {
   type        = string
   sensitive   = true
 }
+
+variable "public_alb_ingress_ports" {
+  description = "The Security Group ingress port for public ALB"
+  type = list(string)
+}
+
+variable "public_alb_egress_ports" {
+  description = "The Security Group egress port for public ALB"
+  type = list(string)
+}
+
+variable "internal_alb_ingress_ports" {
+  description = "The internal ALB ingress ports"
+  type = list(string)
+}
+
+variable "internal_alb_egress_ports" {
+  description = "The internal ALB ingress ports"
+  type = list(string)
+}

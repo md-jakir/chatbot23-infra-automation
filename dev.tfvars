@@ -40,3 +40,7 @@ pipeline_name                  = "Chatbot23BackendPipeline"
 codebuild_project_name         = "CodeBuildBackendProj"
 codebuild_fontend_project_name = "CodebuildFrontendProj"
 frontend_pipeline_name         = "Chatbot23FrontendPipeline"
+public_alb_ingress_ports       = ["80", "443"]
+public_alb_egress_ports        = ["0"]
+internal_alb_egress_ports      = ["0"]
+internal_alb_ingress_ports      = ["8000"]

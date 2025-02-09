@@ -67,6 +67,10 @@ module "ALB" {
   chatbot_frontend_alb    = var.chatbot_frontend_alb
   chatbot_backend_alb     = var.chatbot_backend_alb
   chatbot_backend_tg      = var.chatbot_backend_tg
+  public_alb_egress_ports = var.public_alb_egress_ports
+  public_alb_ingress_ports = var.public_alb_ingress_ports
+  internal_alb_egress_ports = var.internal_alb_egress_ports
+  internal_alb_ingress_ports = var.internal_alb_ingress_ports
 
   depends_on = [module.vpc]
 }
