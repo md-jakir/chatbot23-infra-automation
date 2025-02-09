@@ -1,8 +1,8 @@
 # Security Group for Internet-facing ALB
 resource "aws_security_group" "internet_alb_sg" {
   name_prefix = "${terraform.workspace}-${var.frontend_sg_prefix_name}"
+  description = "Allowing 80 and 443 traffic from internet"
   vpc_id      = var.vpc_id
-  description = "Security Group for the public ALB"
 
   dynamic "ingress" {
     for_each = var.public_alb_ingress_ports
@@ -12,6 +12,7 @@ resource "aws_security_group" "internet_alb_sg" {
       to_port = port.value
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      description = "Ingress Traffic"
     }
   }
   dynamic "egress" {
@@ -22,6 +23,7 @@ resource "aws_security_group" "internet_alb_sg" {
       to_port = port.value
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      description = "Egress Traffic"
     }
   }
   tags = {
@@ -33,6 +35,7 @@ resource "aws_security_group" "internet_alb_sg" {
 # Security Group for Internal ALB
 resource "aws_security_group" "internal_alb_sg" {
   name_prefix = "${terraform.workspace}-${var.backend_sg_prefix_name}"
+  description = "Allowing 8000 port traffic from internet"
   vpc_id      = var.vpc_id
 
   dynamic "ingress" {
@@ -43,6 +46,7 @@ resource "aws_security_group" "internal_alb_sg" {
       to_port = port.value
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      description = "Ingress Traffic"
     }
   }
   dynamic "egress" {
@@ -53,6 +57,7 @@ resource "aws_security_group" "internal_alb_sg" {
       to_port = port.value
       protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      description = "Egress Traffic"
     }
   }
   tags = {
@@ -64,6 +69,7 @@ resource "aws_security_group" "internal_alb_sg" {
 # Frontend Security Group
 resource "aws_security_group" "frontend_app_sg" {
   name_prefix = "${terraform.workspace}-${var.app_frontend_sg}"
+  description = "Allowing 80 and 443 traffic from internet ALB to APP"
   vpc_id      = var.vpc_id
 
   # Allow inbound HTTP (80) from ALB security group
@@ -72,6 +78,7 @@ resource "aws_security_group" "frontend_app_sg" {
     to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.internet_alb_sg.id]
+    description     = "80 ingress traffic"
   }
 
   # Allow inbound HTTPS (443) from ALB security group
@@ -80,14 +87,16 @@ resource "aws_security_group" "frontend_app_sg" {
     to_port         = 443
     protocol        = "tcp"
     security_groups = [aws_security_group.internet_alb_sg.id]
+    description     = "443 ingress traffic"
   }
 
   # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Egress Traffic for all"
   }
   tags = {
     Name        = "${terraform.workspace}-${var.app_frontend_sg}"
@@ -206,13 +215,15 @@ resource "aws_security_group" "db_security_group" {
     to_port   = 5432
     protocol  = "tcp"
     security_groups = [aws_security_group.internal_alb_sg.id]
+    description     = "DB ingress traffic from internal ALB" 
   }
 
   egress {
     from_port = 0
     to_port   = 0
-    protocol  = "-1"
+    protocol  = "tcp"
     security_groups = [aws_security_group.internal_alb_sg.id]
+    description     = "Egress Traffic"
   }
 
   tags = {
