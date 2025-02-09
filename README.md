@@ -125,6 +125,7 @@ Automate the two tier application infrastructure.
 # Checkov Result 
 ![image](https://github.com/user-attachments/assets/76ed8bc3-31a1-4f2d-abae-7ccc0f96fce3)
 ![image](https://github.com/user-attachments/assets/73dfe59c-0a01-4171-828d-0181e85436b3)
+![image](https://github.com/user-attachments/assets/e2ff6ae5-3b25-4138-8b25-0540cfcbf79b)
 
 $ terrascan result
 ![image](https://github.com/user-attachments/assets/69041ce4-3266-4ca5-9cdf-762187ea6495)
