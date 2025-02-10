@@ -15,5 +15,5 @@ repos:
         - --hook-config=--create-file-if-not-exist=true
       - id: terraform_validate
         args: ["--"]
-      # - id: terraform_tflint
-      #   args: ["--"]
+      - id: terraform_tflint
+        args: ["--"]
