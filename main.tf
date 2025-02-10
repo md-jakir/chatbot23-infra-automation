@@ -1,25 +1,25 @@
 # AWS provider Block
-provider "aws" {
-  region  = var.region_name
-  profile = "AI-chatbot-905418236735"
-}
+# provider "aws" {
+#   region  = var.region_name
+#   profile = "AI-chatbot-905418236735"
+# }
 
-# Terraform provider Block
-terraform {
-  required_version = "~> 1.9.0"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.85.0"
-    }
-  }
-  #backend "s3" {}
-  # bucket  = "dev-tf-state-file-ap-south-1"
-  # key     = "chatbot-app/${terraform.workspace}/terraform.tfstate"
-  # region  = "ap-south-1"
-  # encrypt = true
-  #dynamodb_table = "${var.project_name}-tf-locks"
-}
+# # Terraform provider Block
+# terraform {
+#   required_version = "~> 1.9.0"
+#   required_providers {
+#     aws = {
+#       source  = "hashicorp/aws"
+#       version = "~> 5.85.0"
+#     }
+#   }
+#   #backend "s3" {}
+#   # bucket  = "dev-tf-state-file-ap-south-1"
+#   # key     = "chatbot-app/${terraform.workspace}/terraform.tfstate"
+#   # region  = "ap-south-1"
+#   # encrypt = true
+#   #dynamodb_table = "${var.project_name}-tf-locks"
+# }
 
 # Hasicorp vault provider Block
 provider "vault" {
@@ -53,34 +53,33 @@ module "vpc" {
 
 # ALB Module
 module "ALB" {
-  source                  = "./modules/ALB" # Path to your ALB module
-  vpc_id                  = module.vpc.vpc_id
-  public_subnets          = module.vpc.public_subnet_ids
-  private_subnets         = module.vpc.private_subnet_ids
-  vpc_cidr                = var.vpc_cidr
-  private_ip_targets      = var.private_ip_targets
-  chatbot_frontend_tg     = var.chatbot_frontend_tg
-  frontend_sg_prefix_name = var.frontend_sg_prefix_name
-  backend_sg_prefix_name  = var.backend_sg_prefix_name
-  db_security_group       = var.db_security_group
-  app_frontend_sg         = var.app_frontend_sg
-  chatbot_frontend_alb    = var.chatbot_frontend_alb
-  chatbot_backend_alb     = var.chatbot_backend_alb
-  chatbot_backend_tg      = var.chatbot_backend_tg
-  public_alb_egress_ports = var.public_alb_egress_ports
-  public_alb_ingress_ports = var.public_alb_ingress_ports
-  internal_alb_egress_ports = var.internal_alb_egress_ports
+  source         = "./modules/ALB" # Path to your ALB module
+  vpc_id         = module.vpc.vpc_id
+  public_subnets = module.vpc.public_subnet_ids
+  #private_subnets         = module.vpc.private_subnet_ids
+  #vpc_cidr                = var.vpc_cidr
+  #private_ip_targets      = var.private_ip_targets
+  chatbot_frontend_tg        = var.chatbot_frontend_tg
+  frontend_sg_prefix_name    = var.frontend_sg_prefix_name
+  backend_sg_prefix_name     = var.backend_sg_prefix_name
+  db_security_group          = var.db_security_group
+  app_frontend_sg            = var.app_frontend_sg
+  chatbot_frontend_alb       = var.chatbot_frontend_alb
+  chatbot_backend_alb        = var.chatbot_backend_alb
+  chatbot_backend_tg         = var.chatbot_backend_tg
+  public_alb_egress_ports    = var.public_alb_egress_ports
+  public_alb_ingress_ports   = var.public_alb_ingress_ports
+  internal_alb_egress_ports  = var.internal_alb_egress_ports
   internal_alb_ingress_ports = var.internal_alb_ingress_ports
-
-  depends_on = [module.vpc]
+  depends_on                 = [module.vpc]
 }
 
 # ECS module start
 module "ECS" {
-  source          = "./modules/ECS"
-  cluster_name    = var.cluster_name
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnet_ids
+  source       = "./modules/ECS"
+  cluster_name = var.cluster_name
+  vpc_id       = module.vpc.vpc_id
+  #private_subnets = module.vpc.private_subnet_ids
 }
 
 # ECR module start
@@ -124,8 +123,8 @@ module "backend_taskdef" {
   secret_key_arn            = module.parameter_store.secret_key_arn
   session_token_arn         = module.parameter_store.session_token_arn
   access_key_arn            = module.parameter_store.access_key_arn
-  task_role_arn             = module.iam.task_role_arn
-  project_name              = var.project_name
+  #task_role_arn             = module.iam.task_role_arn
+  project_name = var.project_name
   depends_on = [
     module.parameter_store,
     module.iam,
@@ -161,22 +160,20 @@ module "backend_codebuild" {
   service_role_arn       = module.iam.codebuild_role_arn
   codebuild_project_name = var.codebuild_project_name
   region_name            = var.region_name
-
-  depends_on = [module.iam]
+  depends_on             = [module.iam]
 }
 
 # ECS Service for Frontend
 module "ecs_service_frontend" {
-  source                   = "./modules/frontend_ecs_service"
-  frontend_taskdef_arn     = module.fronted_taskdef.frontend_task_definition_arn
-  private_subnets          = module.vpc.private_subnet_ids
-  internet_alb_name        = module.ALB.internet_alb_arn
+  source               = "./modules/frontend_ecs_service"
+  frontend_taskdef_arn = module.fronted_taskdef.frontend_task_definition_arn
+  private_subnets      = module.vpc.private_subnet_ids
+  #internet_alb_name        = module.ALB.internet_alb_arn
   internet_alb_tg          = module.ALB.internet_alb_tg_arn
   ecs_cluster_name         = module.ECS.cluster_arn
   frontend_security_groups = [module.ALB.frontend_security_group]
   aws_region               = var.region_name
   project_name             = var.project_name
-
   depends_on = [
     module.ALB,
     module.ECS,
@@ -190,13 +187,12 @@ module "ecs_service_backend" {
   source              = "./modules/backend_ecs_service"
   backend_taskdef_arn = module.backend_taskdef.backend_task_definition_arn
   private_subnets     = module.vpc.private_subnet_ids
-  internal_alb_name   = module.ALB.internal_alb_arn
-  internal_alb_tg     = module.ALB.internal_alb_tg_arn
-  security_groups     = [module.ALB.internal_security_group_id]
-  ecs_cluster_name    = module.ECS.cluster_arn
-  aws_region          = var.region_name
-  project_name        = var.project_name
-
+  #internal_alb_name   = module.ALB.internal_alb_arn
+  internal_alb_tg  = module.ALB.internal_alb_tg_arn
+  security_groups  = [module.ALB.internal_security_group_id]
+  ecs_cluster_name = module.ECS.cluster_arn
+  aws_region       = var.region_name
+  project_name     = var.project_name
   depends_on = [
     module.ALB,
     module.vpc,
@@ -233,7 +229,6 @@ module "chatbot_backend_codepipeline" {
   codestart_connection_arn      = module.codestart_connection_github.codestart_arn
   project_name                  = var.project_name
   pipeline_name                 = var.pipeline_name
-
   depends_on = [
     module.iam,
     module.ECS,
@@ -245,7 +240,7 @@ module "chatbot_backend_codepipeline" {
 module "cloudtrail" {
   source       = "./modules/CloudTrail"
   project_name = var.project_name
-  region       = var.region_name
+  #region       = var.region_name
 }
 
 module "config" {

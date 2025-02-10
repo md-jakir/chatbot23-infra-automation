@@ -43,4 +43,4 @@ frontend_pipeline_name         = "Chatbot23FrontendPipeline"
 public_alb_ingress_ports       = ["80", "443"]
 public_alb_egress_ports        = ["0"]
 internal_alb_egress_ports      = ["0"]
-internal_alb_ingress_ports      = ["8000"]
+internal_alb_ingress_ports     = ["8000"]

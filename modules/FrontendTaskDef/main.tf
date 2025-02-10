@@ -5,7 +5,6 @@ locals {
   log_group_name          = "/ecs/${terraform.workspace}-FrontendLogsGroup"
 }
 
-
 resource "aws_ecs_task_definition" "frontend_task" {
   family                   = "${terraform.workspace}-FrontendTask"
   requires_compatibilities = ["FARGATE"]
@@ -22,7 +21,7 @@ resource "aws_ecs_task_definition" "frontend_task" {
     log_group_name                  = local.log_group_name
   })
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
     projectName = var.project_name
     ServiceName = "Frontend"
   }

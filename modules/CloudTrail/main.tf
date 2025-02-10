@@ -2,10 +2,9 @@
 resource "aws_s3_bucket" "cloudtrail_bucket" {
   bucket        = "${terraform.workspace}-${var.project_name}-cloud-trail-logs"
   force_destroy = true
-
   tags = {
-    projectName = "${var.project_name}"
-    Environment = "${terraform.workspace}"
+    projectName = var.project_name
+    Environment = terraform.workspace
   }
 }
 
@@ -13,7 +12,6 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
   statement {
     sid    = "AWSCloudTrailAclCheck"
     effect = "Allow"
-
     principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
@@ -21,7 +19,6 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
 
     actions   = ["s3:GetBucketAcl"]
     resources = [aws_s3_bucket.cloudtrail_bucket.arn]
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
@@ -34,23 +31,19 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
   statement {
     sid    = "AWSCloudTrailWrite"
     effect = "Allow"
-
     principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
-
     actions = ["s3:PutObject"]
     resources = [
       "${aws_s3_bucket.cloudtrail_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
-
     condition {
       test     = "StringEquals"
       variable = "s3:x-amz-acl"
       values   = ["bucket-owner-full-control"]
     }
-
     condition {
       test     = "StringEquals"
       variable = "aws:SourceArn"
@@ -64,12 +57,10 @@ data "aws_iam_policy_document" "trail_bucket_policy" {
   statement {
     sid    = "AWSCloudTrailS3BucketPermissions"
     effect = "Allow"
-
     principals {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
-
     actions   = ["s3:GetBucketLocation"]
     resources = [aws_s3_bucket.cloudtrail_bucket.arn]
   }
@@ -96,7 +87,6 @@ resource "aws_cloudtrail" "chatbot_trail" {
   #cloud_watch_logs_group_arn    = aws_cloudwatch_log_group.cloudtrail_log_group.arn
   #cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail_role.arn
   kms_key_id = var.kms_key_id # Optional, for encrypting CloudTrail logs
-
   depends_on = [
     aws_s3_bucket.cloudtrail_bucket,
     aws_s3_bucket_policy.trail_bucket_policy
@@ -105,15 +95,13 @@ resource "aws_cloudtrail" "chatbot_trail" {
   event_selector {
     read_write_type           = "All"
     include_management_events = true
-
     data_resource {
       type   = "AWS::S3::Object"
       values = ["arn:aws:s3:::${aws_s3_bucket.cloudtrail_bucket.bucket}/"]
     }
   }
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
     Project     = var.project_name
   }
 }

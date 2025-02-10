@@ -8,7 +8,7 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "private_subnets" {
-  description = "Private subnets for ECS services"
-  type        = list(string)
-}
+# variable "private_subnets" {
+#   description = "Private subnets for ECS services"
+#   type        = list(string)
+# }

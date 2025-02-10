@@ -6,7 +6,7 @@ variable "service_role_arn" {
 variable "github_token_name" {
   type        = string
   description = "The name of GitHub Token"
-  default = "chatbot-github-app-token"
+  default     = "chatbot-github-app-token"
 }
 
 variable "codebuild_fontend_project_name" {
@@ -17,10 +17,10 @@ variable "codebuild_fontend_project_name" {
 variable "branch_name" {
   type        = string
   description = "The codebulid project name"
-  default = "devops"
+  default     = "devops"
 }
 
 variable "region_name" {
   description = "Region Name"
-  type = string
+  type        = string
 }

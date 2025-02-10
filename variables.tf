@@ -20,10 +20,10 @@ variable "availability_zones" {
 }
 
 # ALB $ Security Group variables
-variable "private_ip_targets" {
-  description = "List of private IP addresses in private subnets for target groups"
-  type        = list(string)
-}
+# variable "private_ip_targets" {
+#   description = "List of private IP addresses in private subnets for target groups"
+#   type        = list(string)
+# }
 
 variable "frontend_sg_prefix_name" {
   description = "Frontend Security Group Prefix Name"
@@ -82,59 +82,59 @@ variable "codestart_connection" {
 }
 
 # Parameter Store variables
-variable "nextauth_secret" {
-  description = "NextAuth secret value"
-  type        = string
-  sensitive   = true
-}
+# variable "nextauth_secret" {
+#   description = "NextAuth secret value"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "db_url" {
-  description = "Database URL"
-  type        = string
-  sensitive   = true
-}
+# variable "db_url" {
+#   description = "Database URL"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "jwt_secret" {
-  description = "jwt secret"
-  type        = string
-  sensitive   = true
-}
+# variable "jwt_secret" {
+#   description = "jwt secret"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "jwt_secret_for_verify" {
-  description = "JWT secret for verify"
-  type        = string
-  sensitive   = true
-}
+# variable "jwt_secret_for_verify" {
+#   description = "JWT secret for verify"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "openai_api_key" {
-  description = "OpenAI API key"
-  type        = string
-  sensitive   = true
-}
+# variable "openai_api_key" {
+#   description = "OpenAI API key"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "sender_password" {
-  description = "Sender Password"
-  type        = string
-  sensitive   = true
-}
+# variable "sender_password" {
+#   description = "Sender Password"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "access_key" {
-  description = "Access key"
-  type        = string
-  sensitive   = true
-}
+# variable "access_key" {
+#   description = "Access key"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "secret_key" {
-  description = "Secret key"
-  type        = string
-  sensitive   = true
-}
+# variable "secret_key" {
+#   description = "Secret key"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "session_token" {
-  description = "Session token"
-  type        = string
-  sensitive   = true
-}
+# variable "session_token" {
+#   description = "Session token"
+#   type        = string
+#   sensitive   = true
+# }
 
 # Common variables
 variable "project_name" {
@@ -205,20 +205,20 @@ variable "vault_secret_id" {
 
 variable "public_alb_ingress_ports" {
   description = "The Security Group ingress port for public ALB"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "public_alb_egress_ports" {
   description = "The Security Group egress port for public ALB"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "internal_alb_ingress_ports" {
   description = "The internal ALB ingress ports"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "internal_alb_egress_ports" {
   description = "The internal ALB ingress ports"
-  type = list(string)
+  type        = list(string)
 }

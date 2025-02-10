@@ -16,12 +16,10 @@ resource "aws_ecs_service" "backend_service" {
     enable   = true
     rollback = true
   }
-
   network_configuration {
     subnets         = var.private_subnets
     security_groups = var.security_groups
   }
-
   load_balancer {
     target_group_arn = var.internal_alb_tg
     container_name   = var.backend_container
@@ -44,14 +42,14 @@ resource "aws_ecs_service" "backend_service" {
     log_configuration {
       log_driver = "awslogs"
       options = {
-        awslogs-group         = "${local.log_group_name}"
+        awslogs-group         = local.log_group_name
         awslogs-region        = var.aws_region
         awslogs-stream-prefix = "ecs"
       }
     }
   }
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
     projectName = var.project_name
     Service     = "Backend"
   }

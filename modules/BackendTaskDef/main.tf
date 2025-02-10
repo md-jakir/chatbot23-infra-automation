@@ -1,8 +1,8 @@
 locals {
   frontend_discovery_name = "${terraform.workspace}-frontend-discovery"
   ecs_cluster_namespace   = "${terraform.workspace}-chatbot23-ecs-cluster-ns"
-  backend_discovery_name  = "${terraform.workspace}-backend-discovery"
-  log_group_name          = "/ecs/${terraform.workspace}-BackendLogsGroup"
+  #backend_discovery_name  = "${terraform.workspace}-backend-discovery"
+  log_group_name = "/ecs/${terraform.workspace}-BackendLogsGroup"
 }
 
 resource "aws_ecs_task_definition" "backend_task" {
@@ -27,7 +27,7 @@ resource "aws_ecs_task_definition" "backend_task" {
     log_group_name                  = local.log_group_name
   })
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
     projectName = var.project_name
     ServiceName = "Backend"
   }

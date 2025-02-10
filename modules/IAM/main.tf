@@ -1,6 +1,5 @@
 resource "aws_iam_role" "ecs_execution_role" {
   name = "${terraform.workspace}-ECSExecutionRole"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -14,7 +13,7 @@ resource "aws_iam_role" "ecs_execution_role" {
     ]
   })
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -26,7 +25,6 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_policy" {
 # Define an IAM Role for CodeBuild
 resource "aws_iam_role" "codebuild_role" {
   name = "${terraform.workspace}-ChatbotCodebuildRole"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -40,14 +38,13 @@ resource "aws_iam_role" "codebuild_role" {
     ]
   })
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
 # Attach necessary policies to the role
 resource "aws_iam_role_policy" "codebuild_policy" {
   role = aws_iam_role.codebuild_role.name
-
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -75,7 +72,6 @@ resource "aws_iam_role_policy" "codebuild_policy" {
 
 resource "aws_iam_role_policy" "ecs_task_policy" {
   role = aws_iam_role.ecs_execution_role.name
-
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -135,13 +131,12 @@ resource "aws_iam_role" "pipeline_role" {
     ]
   })
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
 resource "aws_iam_policy" "codepipeline_codestar_policy" {
   name = "${terraform.workspace}-CodePipelineCodeStarPolicy"
-
   policy = jsonencode({
     Version = "2012-10-17",
     Statement : [
@@ -163,7 +158,6 @@ resource "aws_iam_role_policy_attachment" "codestar_policy" {
 
 resource "aws_iam_policy" "codepipeline_s3_policy" {
   name = "${terraform.workspace}-CodePipelineS3Access"
-
   policy = jsonencode({
     Version = "2012-10-17",
     Statement : [
@@ -190,7 +184,6 @@ resource "aws_iam_role_policy_attachment" "attach_codepipeline_s3_policy" {
 
 resource "aws_iam_policy" "codepipeline_codebuild_policy" {
   name = "${terraform.workspace}-CodePipelineCodeBuildAccess"
-
   policy = jsonencode({
     Version = "2012-10-17",
     Statement : [
@@ -216,8 +209,7 @@ resource "aws_iam_role_policy_attachment" "attach_codepipeline_codebuild_policy"
 resource "aws_iam_policy" "codepipeline_policy" {
   name        = "${terraform.workspace}-CodePipelinePolicy"
   description = "IAM policy for CodePipeline and related services"
-
-  policy = <<POLICY
+  policy      = <<POLICY
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -407,4 +399,3 @@ resource "aws_iam_role_policy_attachment" "attach_codepipeline_policy" {
   role       = aws_iam_role.pipeline_role.name
   policy_arn = aws_iam_policy.codepipeline_policy.arn
 }
-

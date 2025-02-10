@@ -3,10 +3,10 @@ variable "project_name" {
   type        = string
 }
 
-variable "region" {
-  description = "AWS region to deploy the resources."
-  type        = string
-}
+# variable "region" {
+#   description = "AWS region to deploy the resources."
+#   type        = string
+# }
 
 variable "kms_key_id" {
   description = "The ARN of the KMS key for encrypting CloudTrail logs (optional). Leave blank if not using encryption."

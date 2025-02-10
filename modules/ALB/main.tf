@@ -8,9 +8,9 @@ resource "aws_security_group" "internet_alb_sg" {
     for_each = var.public_alb_ingress_ports
     iterator = port
     content {
-      from_port = port.value
-      to_port = port.value
-      protocol = "tcp"
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       description = "Ingress Traffic"
     }
@@ -19,16 +19,16 @@ resource "aws_security_group" "internet_alb_sg" {
     for_each = var.public_alb_egress_ports
     iterator = port
     content {
-      from_port = port.value
-      to_port = port.value
-      protocol = "tcp"
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
-      description = "Egress Traffic"
+      description = "Egress Traffic for internet ALB"
     }
   }
   tags = {
     Name        = "${terraform.workspace}-${var.frontend_sg_prefix_name}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -42,27 +42,27 @@ resource "aws_security_group" "internal_alb_sg" {
     for_each = var.internal_alb_ingress_ports
     iterator = port
     content {
-      from_port = port.value
-      to_port = port.value
-      protocol = "tcp"
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
-      description = "Ingress Traffic"
+      description = "Ingress Traffic for internal ALB"
     }
   }
   dynamic "egress" {
     for_each = var.internal_alb_egress_ports
     iterator = port
     content {
-      from_port = port.value
-      to_port = port.value
-      protocol = "tcp"
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
       description = "Egress Traffic"
     }
   }
   tags = {
     Name        = "${terraform.workspace}-${var.backend_sg_prefix_name}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -100,7 +100,7 @@ resource "aws_security_group" "frontend_app_sg" {
   }
   tags = {
     Name        = "${terraform.workspace}-${var.app_frontend_sg}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -115,7 +115,7 @@ resource "aws_lb" "internet_alb" {
   enable_deletion_protection = false
 
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -130,7 +130,7 @@ resource "aws_lb" "internal_alb" {
   enable_deletion_protection = false
 
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -145,7 +145,7 @@ resource "aws_lb_listener" "internet_alb_listener" {
     target_group_arn = aws_lb_target_group.internet_alb_tg.arn
   }
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -160,7 +160,7 @@ resource "aws_lb_listener" "internal_alb_listener" {
     target_group_arn = aws_lb_target_group.internal_alb_tg.arn
   }
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -180,7 +180,7 @@ resource "aws_lb_target_group" "internet_alb_tg" {
     unhealthy_threshold = 3
   }
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -200,7 +200,7 @@ resource "aws_lb_target_group" "internal_alb_tg" {
     unhealthy_threshold = 3
   }
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -211,23 +211,23 @@ resource "aws_security_group" "db_security_group" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
     security_groups = [aws_security_group.internal_alb_sg.id]
-    description     = "DB ingress traffic from internal ALB" 
+    description     = "DB ingress traffic from internal ALB"
   }
 
   egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "tcp"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "tcp"
     security_groups = [aws_security_group.internal_alb_sg.id]
     description     = "Egress Traffic"
   }
 
   tags = {
     Name        = "${terraform.workspace}-${var.db_security_group}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }

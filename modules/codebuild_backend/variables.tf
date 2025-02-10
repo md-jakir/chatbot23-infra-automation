@@ -8,11 +8,11 @@ variable "codebuild_project_name" {
   description = "The backend codebulid project name"
 }
 
-variable "branch_name" {
-  type        = string
-  description = "The codebulid project name"
-  default     = "devops"
-}
+# variable "branch_name" {
+#   type        = string
+#   description = "The codebulid project name"
+#   default     = "devops"
+# }
 
 variable "region_name" {
   description = "Region Name"

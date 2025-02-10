@@ -8,20 +8,20 @@ variable "public_subnets" {
   type        = list(string)
 }
 
-variable "private_subnets" {
-  description = "List of private subnet IDs for internal-facing ALB"
-  type        = list(string)
-}
+# variable "private_subnets" {
+#   description = "List of private subnet IDs for internal-facing ALB"
+#   type        = list(string)
+# }
 
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
-  type        = string
-}
+# variable "vpc_cidr" {
+#   description = "CIDR block for the VPC"
+#   type        = string
+# }
 
-variable "private_ip_targets" {
-  description = "List of private IP addresses in private subnets for target groups"
-  type        = list(string)
-}
+# variable "private_ip_targets" {
+#   description = "List of private IP addresses in private subnets for target groups"
+#   type        = list(string)
+# }
 
 variable "frontend_sg_prefix_name" {
   description = "Frontend Security Group Prefix Name"
@@ -65,20 +65,20 @@ variable "db_security_group" {
 
 variable "public_alb_ingress_ports" {
   description = "The Security Group ingress port for public ALB"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "public_alb_egress_ports" {
-  description  = "The Security Group egress port for public ALB"
-  type = list(string)
+  description = "The Security Group egress port for public ALB"
+  type        = list(string)
 }
 
 variable "internal_alb_ingress_ports" {
   description = "The internal ALB ingress ports"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "internal_alb_egress_ports" {
   description = "The internal ALB ingress ports"
-  type = list(string)
+  type        = list(string)
 }

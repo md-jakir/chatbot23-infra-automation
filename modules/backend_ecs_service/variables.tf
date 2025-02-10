@@ -58,10 +58,10 @@ variable "port_name_alias" {
   default     = "backend-port"
 }
 
-variable "internal_alb_name" {
-  description = "Internal ALB Name"
-  type        = string
-}
+# variable "internal_alb_name" {
+#   description = "Internal ALB Name"
+#   type        = string
+# }
 
 variable "ecs_cluster_name" {
   description = "ECS Cluster Name"

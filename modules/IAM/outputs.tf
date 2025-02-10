@@ -17,4 +17,3 @@ output "chatbot_codepipeline_role_arn" {
   description = "ARN of the ECS Task Role"
   value       = aws_iam_role.pipeline_role.arn
 }
-

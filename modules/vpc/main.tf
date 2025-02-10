@@ -4,7 +4,7 @@ resource "aws_vpc" "chatbot-app" {
   enable_dns_hostnames = true
   tags = {
     Name        = "${terraform.workspace}-Chatbot23VPC"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -17,7 +17,7 @@ resource "aws_subnet" "public" {
   availability_zone       = element(var.availability_zones, count.index)
   tags = {
     Name        = "${terraform.workspace}-Chatbot23PublicSubnet-${count.index + 1}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -29,16 +29,16 @@ resource "aws_subnet" "private" {
   availability_zone = element(var.availability_zones, count.index)
   tags = {
     Name        = "${terraform.workspace}-Chatbot23PrivateSubnet-${count.index + 1}"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
-# Create Internet Gateway
+# Create Internet Gateway adding
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.chatbot-app.id
   tags = {
     Name        = "${terraform.workspace}-Chatbot23IGW"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = aws_subnet.public[0].id
   tags = {
     Name        = "${terraform.workspace}-NatGateway"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -61,7 +61,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.chatbot-app.id
   tags = {
     Name        = "${terraform.workspace}-PublicRouteTable"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -84,7 +84,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.chatbot-app.id
   tags = {
     Name        = "${terraform.workspace}-PrivateRouteTable"
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -101,5 +101,3 @@ resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
 }
-
-

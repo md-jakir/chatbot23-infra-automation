@@ -3,9 +3,8 @@ resource "aws_ssm_parameter" "nextauth_secret" {
   type        = "SecureString"
   value       = var.nextauth_secret
   description = "NextAuth Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -14,9 +13,8 @@ resource "aws_ssm_parameter" "db_url" {
   type        = "SecureString"
   value       = var.db_url
   description = "Database URL"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -25,9 +23,8 @@ resource "aws_ssm_parameter" "jwt_secret" {
   type        = "SecureString"
   value       = var.jwt_secret
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -36,9 +33,8 @@ resource "aws_ssm_parameter" "jwt_secret_for_verify" {
   type        = "SecureString"
   value       = var.jwt_secret_for_verify
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -47,9 +43,8 @@ resource "aws_ssm_parameter" "openai_api_key" {
   type        = "SecureString"
   value       = var.openai_api_key
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -58,9 +53,8 @@ resource "aws_ssm_parameter" "sender_password" {
   type        = "SecureString"
   value       = var.sender_password
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -69,9 +63,8 @@ resource "aws_ssm_parameter" "access_key" {
   type        = "SecureString"
   value       = var.access_key
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -80,9 +73,8 @@ resource "aws_ssm_parameter" "secret_key" {
   type        = "SecureString"
   value       = var.secret_key
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }
 
@@ -91,8 +83,7 @@ resource "aws_ssm_parameter" "session_token" {
   type        = "SecureString"
   value       = var.session_token
   description = "JWT Secret"
-
   tags = {
-    Environment = "${terraform.workspace}"
+    Environment = terraform.workspace
   }
 }

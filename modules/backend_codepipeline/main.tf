@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "codepipeline_bucket" {
   bucket = "${terraform.workspace}-${var.project_name}-pipeline-backend"
-
   tags = {
     Environment = terraform.workspace
     Name        = "BackendPipelineS3"
@@ -12,12 +11,10 @@ resource "aws_codepipeline" "pipeline" {
   role_arn       = var.chatbot_codepipeline_role_arn
   pipeline_type  = "V2"
   execution_mode = "QUEUED"
-
   artifact_store {
     type     = "S3"
     location = aws_s3_bucket.codepipeline_bucket.bucket
   }
-
   stage {
     name = "Source"
     action {
@@ -35,10 +32,8 @@ resource "aws_codepipeline" "pipeline" {
       }
     }
   }
-
   stage {
     name = "Build"
-
     action {
       name             = "${terraform.workspace}-${var.project_name}-backend-build"
       category         = "Build"
@@ -47,16 +42,13 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
       input_artifacts  = ["source_output"]
       output_artifacts = ["build_output"]
-
       configuration = {
         ProjectName = var.build_project_name
       }
     }
   }
-
   stage {
     name = "Deploy"
-
     action {
       name            = "${terraform.workspace}-ECSBackendDeploy"
       category        = "Deploy"
@@ -64,7 +56,6 @@ resource "aws_codepipeline" "pipeline" {
       provider        = "ECS"
       version         = "1"
       input_artifacts = ["build_output"]
-
       configuration = {
         ClusterName = var.ecs_cluster_name
         ServiceName = var.ecs_service_name

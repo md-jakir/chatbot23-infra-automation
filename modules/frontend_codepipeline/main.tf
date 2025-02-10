@@ -17,7 +17,6 @@ resource "aws_codepipeline" "pipeline" {
   role_arn       = var.chatbot_codepipeline_role_arn
   pipeline_type  = "V2"
   execution_mode = "QUEUED"
-
   artifact_store {
     type     = "S3"
     location = aws_s3_bucket.codepipeline_bucket.bucket
@@ -43,7 +42,6 @@ resource "aws_codepipeline" "pipeline" {
 
   stage {
     name = "Build"
-
     action {
       name             = "${terraform.workspace}-${var.project_name}-frontend-build"
       category         = "Build"
@@ -61,7 +59,6 @@ resource "aws_codepipeline" "pipeline" {
 
   stage {
     name = "Deploy"
-
     action {
       name            = "${terraform.workspace}-ECSFrontendDeploy"
       category        = "Deploy"
@@ -69,7 +66,6 @@ resource "aws_codepipeline" "pipeline" {
       provider        = "ECS"
       version         = "1"
       input_artifacts = ["build_output"]
-
       configuration = {
         ClusterName = var.ecs_cluster_name
         ServiceName = var.ecs_service_name
