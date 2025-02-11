@@ -37,7 +37,7 @@ provider "vault" {
   }
 }
 
-data "vault_kv_secret_v2" "chatbot23_KV" {
+data "vault_kv_secret_v2" "chatbot23_kv" {
   mount = "chatbot23_secret"
   name  = "nextauth"
 }
@@ -52,7 +52,7 @@ module "vpc" {
 }
 
 # ALB Module
-module "ALB" {
+module "alb" {
   source         = "./modules/ALB" # Path to your ALB module
   vpc_id         = module.vpc.vpc_id
   public_subnets = module.vpc.public_subnet_ids
@@ -75,7 +75,7 @@ module "ALB" {
 }
 
 # ECS module start
-module "ECS" {
+module "ecs" {
   source       = "./modules/ECS"
   cluster_name = var.cluster_name
   vpc_id       = module.vpc.vpc_id
@@ -103,7 +103,7 @@ module "fronted_taskdef" {
   project_name        = var.project_name
   region              = var.region_name
   depends_on = [
-    module.ECS,
+    module.ecs,
     module.iam,
     module.parameter_store
 
@@ -128,22 +128,22 @@ module "backend_taskdef" {
   depends_on = [
     module.parameter_store,
     module.iam,
-    module.ECS
+    module.ecs
   ]
 }
 
 # Parameter Stotre module
 module "parameter_store" {
   source                = "./modules/parameter_store"
-  nextauth_secret       = data.vault_kv_secret_v2.chatbot23_KV.data["nextauth_secret"]
-  db_url                = data.vault_kv_secret_v2.chatbot23_KV.data["DBUrl"]
-  jwt_secret            = data.vault_kv_secret_v2.chatbot23_KV.data["jwt_secret"]
-  secret_key            = data.vault_kv_secret_v2.chatbot23_KV.data["secret_key"]
-  openai_api_key        = data.vault_kv_secret_v2.chatbot23_KV.data["openai_api_key"]
-  session_token         = data.vault_kv_secret_v2.chatbot23_KV.data["session_token"]
-  sender_password       = data.vault_kv_secret_v2.chatbot23_KV.data["sender_password"]
-  jwt_secret_for_verify = data.vault_kv_secret_v2.chatbot23_KV.data["jwt_secret_for_verify"]
-  access_key            = data.vault_kv_secret_v2.chatbot23_KV.data["access_key"]
+  nextauth_secret       = data.vault_kv_secret_v2.chatbot23_kv.data["nextauth_secret"]
+  db_url                = data.vault_kv_secret_v2.chatbot23_kv.data["DBUrl"]
+  jwt_secret            = data.vault_kv_secret_v2.chatbot23_kv.data["jwt_secret"]
+  secret_key            = data.vault_kv_secret_v2.chatbot23_kv.data["secret_key"]
+  openai_api_key        = data.vault_kv_secret_v2.chatbot23_kv.data["openai_api_key"]
+  session_token         = data.vault_kv_secret_v2.chatbot23_kv.data["session_token"]
+  sender_password       = data.vault_kv_secret_v2.chatbot23_kv.data["sender_password"]
+  jwt_secret_for_verify = data.vault_kv_secret_v2.chatbot23_kv.data["jwt_secret_for_verify"]
+  access_key            = data.vault_kv_secret_v2.chatbot23_kv.data["access_key"]
 }
 
 # CodeBuild Module for Frontend
@@ -169,14 +169,14 @@ module "ecs_service_frontend" {
   frontend_taskdef_arn = module.fronted_taskdef.frontend_task_definition_arn
   private_subnets      = module.vpc.private_subnet_ids
   #internet_alb_name        = module.ALB.internet_alb_arn
-  internet_alb_tg          = module.ALB.internet_alb_tg_arn
-  ecs_cluster_name         = module.ECS.cluster_arn
-  frontend_security_groups = [module.ALB.frontend_security_group]
+  internet_alb_tg          = module.alb.internet_alb_tg_arn
+  ecs_cluster_name         = module.ecs.cluster_arn
+  frontend_security_groups = [module.alb.frontend_security_group]
   aws_region               = var.region_name
   project_name             = var.project_name
   depends_on = [
-    module.ALB,
-    module.ECS,
+    module.alb,
+    module.ecs,
     module.vpc,
     module.fronted_taskdef
   ]
@@ -188,15 +188,15 @@ module "ecs_service_backend" {
   backend_taskdef_arn = module.backend_taskdef.backend_task_definition_arn
   private_subnets     = module.vpc.private_subnet_ids
   #internal_alb_name   = module.ALB.internal_alb_arn
-  internal_alb_tg  = module.ALB.internal_alb_tg_arn
-  security_groups  = [module.ALB.internal_security_group_id]
-  ecs_cluster_name = module.ECS.cluster_arn
+  internal_alb_tg  = module.alb.internal_alb_tg_arn
+  security_groups  = [module.alb.internal_security_group_id]
+  ecs_cluster_name = module.ecs.cluster_arn
   aws_region       = var.region_name
   project_name     = var.project_name
   depends_on = [
-    module.ALB,
+    module.alb,
     module.vpc,
-    module.ECS,
+    module.ecs,
     module.backend_taskdef
   ]
 }
@@ -204,7 +204,7 @@ module "ecs_service_backend" {
 # Frontend CodePipeline Module
 module "chatbot_codepipeline" {
   source                        = "./modules/frontend_codepipeline"
-  ecs_cluster_name              = module.ECS.cluster_arn
+  ecs_cluster_name              = module.ecs.cluster_arn
   chatbot_codepipeline_role_arn = module.iam.chatbot_codepipeline_role_arn
   ecs_service_name              = module.ecs_service_frontend.ecs_service_name
   build_project_name            = module.frontend_codebuild.frontend_codebuild_id
@@ -222,7 +222,7 @@ module "codestart_connection_github" {
 # Backend CodePipeline Module
 module "chatbot_backend_codepipeline" {
   source                        = "./modules/backend_codepipeline"
-  ecs_cluster_name              = module.ECS.cluster_arn
+  ecs_cluster_name              = module.ecs.cluster_arn
   chatbot_codepipeline_role_arn = module.iam.chatbot_codepipeline_role_arn
   ecs_service_name              = module.ecs_service_backend.ecs_service_name
   build_project_name            = module.backend_codebuild.backend_codebuild_id
@@ -231,7 +231,7 @@ module "chatbot_backend_codepipeline" {
   pipeline_name                 = var.pipeline_name
   depends_on = [
     module.iam,
-    module.ECS,
+    module.ecs,
     module.ecs_service_backend,
     module.backend_codebuild
   ]
@@ -249,7 +249,7 @@ module "config" {
 }
 
 # TF State file in S3
-module "TfStateBackendS3" {
+module "tf_state_backend_s3" {
   source      = "./modules/TfStateBackend"
   region_name = var.region_name
 }

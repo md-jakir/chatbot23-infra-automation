@@ -101,3 +101,22 @@ resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
 }
+
+resource "aws_flow_log" "vpc_flow_logs" {
+  count           = terraform.workspace == "prod" ? 1 : 0
+  vpc_id          = aws_vpc.chatbot-app.id
+  log_destination = aws_cloudwatch_log_group.vpc_flow_logs[0].arn
+  traffic_type    = "ALL"
+
+  tags = {
+    Name        = "vpc-flow-logs-${terraform.workspace}"
+    Environment = terraform.workspace
+  }
+}
+
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  count = terraform.workspace == "prod" ? 1 : 0
+  name  = "vpc-flow-logs-${terraform.workspace}"
+
+  retention_in_days = 30
+}

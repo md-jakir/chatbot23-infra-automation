@@ -41,11 +41,6 @@ variable "port_name_alias" {
   default     = "admin-dashboard-80-tcp"
 }
 
-# variable "internet_alb_name" {
-#   description = "Internet ALB Target Group"
-#   type        = string
-# }
-
 variable "ecs_cluster_name" {
   description = "Internet ALB Target Group"
   type        = string

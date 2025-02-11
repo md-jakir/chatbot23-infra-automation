@@ -19,12 +19,6 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-# ALB $ Security Group variables
-# variable "private_ip_targets" {
-#   description = "List of private IP addresses in private subnets for target groups"
-#   type        = list(string)
-# }
-
 variable "frontend_sg_prefix_name" {
   description = "Frontend Security Group Prefix Name"
   type        = string

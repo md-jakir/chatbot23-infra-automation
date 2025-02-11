@@ -9,17 +9,6 @@ variable "chatbot_codepipeline_role_arn" {
   description = "IAM Role ARN for CodePipeline"
 }
 
-# variable "artifact_bucket_name" {
-#   type        = string
-#   description = "S3 bucket for storing pipeline artifacts"
-# }
-
-# variable "source_repository_name" {
-#   type        = string
-#   description = "Name of the CodeCommit repository"
-#   default = "chatbot_admin_dashboard"
-# }
-
 variable "source_branch_name" {
   type        = string
   description = "Branch name of the repository to monitor"

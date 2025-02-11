@@ -3,17 +3,6 @@ variable "execution_role_arn" {
   type        = string
 }
 
-# variable "task_role_arn" {
-#   description = "IAM role for ECS task execution"
-#   type        = string
-# }
-
-# variable "region" {
-#   description = "log group region"
-#   type        = string
-#   default     = "ap-southeast-1"
-# }
-
 variable "backend" {
   description = "Backend container configuration"
   type = object({

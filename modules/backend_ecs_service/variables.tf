@@ -46,22 +46,11 @@ variable "backend_container" {
   default     = "backend"
 }
 
-# variable "backend_discovery" {
-#   description = "Backend Discovery Name"
-#   type        = string
-#   #default = "backend-svc"
-# }
-
 variable "port_name_alias" {
   description = "Port Alias Name"
   type        = string
   default     = "backend-port"
 }
-
-# variable "internal_alb_name" {
-#   description = "Internal ALB Name"
-#   type        = string
-# }
 
 variable "ecs_cluster_name" {
   description = "ECS Cluster Name"

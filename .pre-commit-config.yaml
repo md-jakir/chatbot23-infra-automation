@@ -13,7 +13,15 @@ repos:
         args:
         - --hook-config=--add-to-existing-file=true
         - --hook-config=--create-file-if-not-exist=true
+      # - id: terraform_checkov
+      # - id: terraform_trivy
+      #   args:
+      #   - --args=--skip-dirs="**/.terraform"
       - id: terraform_validate
-        args: ["--"]
-      - id: terraform_tflint
-        args: ["--"]
+        args:
+        - --args=-json
+        - --args=-no-color
+      # - id: terraform_tflint
+      #   args:
+      #   - --config=.tflint.hcl
+      #   - --call-module-type=all
